@@ -2071,6 +2071,7 @@ GameObject:
   - component: {fileID: 2114125483}
   - component: {fileID: 2114125482}
   - component: {fileID: 2114125481}
+  - component: {fileID: 2114125484}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -2139,6 +2140,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2114125484
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2114125480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf65bf1a5d9901849acc0bd8ef731579, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SettingsNavigation
+  languageDropdown: {fileID: 203943339}
+  backButton: {fileID: 654753665}
+  steeringThreshold: 0.015
+  initialRepeatDelay: 0.4
+  repeatInterval: 0.2
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
