@@ -13,8 +13,28 @@ MonoBehaviour:
   m_Name: MainMenu Shared Data
   m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
   m_TableCollectionName: MainMenu
-  m_TableCollectionNameGuidString: 00000000000000000000000000000000
-  m_Entries: []
+  m_TableCollectionNameGuidString: 81b6582b28d4aa541916f06820fdd717
+  m_Entries:
+  - m_Id: 9892687872
+    m_Key: MAIN_PLAY
+    m_Metadata:
+      m_Items: []
+  - m_Id: 88544276480
+    m_Key: MAIN_SETTINGS
+    m_Metadata:
+      m_Items: []
+  - m_Id: 103316615168
+    m_Key: MAIN_CREDITS
+    m_Metadata:
+      m_Items: []
+  - m_Id: 116620947456
+    m_Key: MAIN_QUIT
+    m_Metadata:
+      m_Items: []
+  - m_Id: 129266774016
+    m_Key: SETTINGS_LANGUAGE
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
