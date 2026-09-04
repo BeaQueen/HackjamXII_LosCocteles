@@ -72,6 +72,77 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Menu",
+            "id": "0e19a369-b996-4997-acca-50e96fbca46d",
+            "actions": [
+                {
+                    "name": "Aceptar",
+                    "type": "Value",
+                    "id": "1e6adaf6-0379-4d52-a6ef-64a3f7ea732d",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true,
+                    "priority": 0
+                },
+                {
+                    "name": "MarchaAtras",
+                    "type": "Value",
+                    "id": "8d8c0cfd-8b92-486c-95da-5a1fa5d32413",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true,
+                    "priority": 0
+                },
+                {
+                    "name": "Volante",
+                    "type": "Value",
+                    "id": "a7421a51-6f43-4c6c-8f9d-77a2b6c412ef",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true,
+                    "priority": 0
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "1b84179c-2e40-4cb0-ac56-86b8cb95e867",
+                    "path": "<HID::Logitech G923 Racing Wheel for PlayStation and PC>/rz",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MarchaAtras",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b5a2f5cd-94d5-45b9-9b74-59054e5d75d2",
+                    "path": "<HID::Logitech G923 Racing Wheel for PlayStation and PC>/z",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Aceptar",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "451d8c0e-f3d2-4ea4-8952-6f6b9b129f08",
+                    "path": "<Joystick>/stick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Volante",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [
