@@ -15,39 +15,53 @@ public class WheelMenuNavigation : MonoBehaviour
     [SerializeField]
     private RectTransform menuWheel;
 
-    // Velocidad a la que gira la rueda
-    // hasta alcanzar la siguiente posición.
+    // Velocidad visual a la que gira la rueda.
     [SerializeField]
     private float rotationSpeed = 500f;
 
-    // Grados que separan cada botón.
-    // Con 4 botones: 360 / 4 = 90 grados.
+    // Grados entre cada botón.
+    // Con 4 botones serían 90 grados.
     [SerializeField]
     private float anglePerButton = 90f;
 
-    // Sensibilidad necesaria para considerar
-    // que el volante se ha girado lo suficiente.
+    // Cantidad mínima de giro del volante
+    // necesaria para empezar a navegar.
     [SerializeField]
     [Range(0.1f, 1f)]
     private float steeringThreshold = 0.4f;
 
+    // Tiempo que esperamos antes de empezar
+    // a repetir el movimiento al mantener pulsado.
+    [SerializeField]
+    private float initialRepeatDelay = 0.5f;
+
+    // Tiempo entre cada movimiento una vez
+    // estamos manteniendo la dirección.
+    [SerializeField]
+    private float repeatInterval = 0.2f;
+
     // Índice del botón seleccionado actualmente.
     private int currentButtonIndex = 0;
 
-    // Rotación hacia la que queremos mover la rueda.
+    // Rotación objetivo de la rueda.
     private Quaternion targetRotation;
 
-    // Evita que mantener el volante girado
-    // cambie de opción continuamente.
-    private bool steeringReturnedToCenter = true;
+    // Dirección que estamos manteniendo actualmente.
+    // -1 = derecha
+    //  1 = izquierda
+    //  0 = ninguna
+    private int heldDirection = 0;
+
+    // Momento en el que podremos realizar
+    // el siguiente movimiento repetido.
+    private float nextRepeatTime = 0f;
 
 
     private void Start()
     {
-        // Si tenemos botones configurados...
+        // Seleccionamos el primer botón al iniciar.
         if (menuButtons.Length > 0)
         {
-            // Seleccionamos el primero.
             SelectButton(currentButtonIndex);
         }
 
@@ -58,24 +72,28 @@ public class WheelMenuNavigation : MonoBehaviour
 
     private void Update()
     {
+        // Dirección que estamos recibiendo
+        // en este frame.
+        int inputDirection = 0;
+
+
         // --------------------------------
         // DEBUG CON TECLADO
         // --------------------------------
 
-        // Flecha derecha:
-        // movemos la selección hacia el lado derecho.
-        if (Keyboard.current != null &&
-            Keyboard.current.rightArrowKey.wasPressedThisFrame)
+        if (Keyboard.current != null)
         {
-            MoveSelection(-1);
-        }
+            // Mantener flecha derecha.
+            if (Keyboard.current.rightArrowKey.isPressed)
+            {
+                inputDirection = -1;
+            }
 
-        // Flecha izquierda:
-        // movemos la selección hacia el lado izquierdo.
-        if (Keyboard.current != null &&
-            Keyboard.current.leftArrowKey.wasPressedThisFrame)
-        {
-            MoveSelection(1);
+            // Mantener flecha izquierda.
+            else if (Keyboard.current.leftArrowKey.isPressed)
+            {
+                inputDirection = 1;
+            }
         }
 
 
@@ -83,51 +101,75 @@ public class WheelMenuNavigation : MonoBehaviour
         // CONTROL CON VOLANTE
         // --------------------------------
 
-        if (Joystick.current != null)
+        // Solo usamos el volante si no estamos
+        // utilizando el teclado en este momento.
+        if (inputDirection == 0 &&
+            Joystick.current != null)
         {
-            // Leemos el eje horizontal del volante.
+            // Leemos el giro horizontal del volante.
             float steering =
                 Joystick.current.stick.x.ReadValue();
 
-            // Si el volante vuelve aproximadamente al centro,
-            // permitimos realizar otra selección.
-            if (Mathf.Abs(steering) < 0.2f)
+            // Giro hacia la derecha.
+            if (steering > steeringThreshold)
             {
-                steeringReturnedToCenter = true;
+                inputDirection = -1;
             }
 
-            // Solo navegamos si el volante
-            // ha vuelto antes al centro.
-            if (steeringReturnedToCenter)
+            // Giro hacia la izquierda.
+            else if (steering < -steeringThreshold)
             {
-                // Volante hacia la derecha.
-                if (steering > steeringThreshold)
-                {
-                    MoveSelection(-1);
-
-                    // Evitamos múltiples cambios
-                    // mientras seguimos girando.
-                    steeringReturnedToCenter = false;
-                }
-
-                // Volante hacia la izquierda.
-                else if (steering < -steeringThreshold)
-                {
-                    MoveSelection(1);
-
-                    // Evitamos múltiples cambios
-                    // mientras seguimos girando.
-                    steeringReturnedToCenter = false;
-                }
+                inputDirection = 1;
             }
         }
 
 
         // --------------------------------
-        // ROTACIÓN VISUAL DE LA RUEDA
+        // REPETICIÓN DEL MOVIMIENTO
         // --------------------------------
 
-        // Giramos suavemente hacia la posición objetivo.
+        // Si no estamos pulsando/girando nada...
+        if (inputDirection == 0)
+        {
+            // Reiniciamos el estado.
+            heldDirection = 0;
+        }
+
+        // Si acabamos de empezar a mantener
+        // una nueva dirección...
+        else if (inputDirection != heldDirection)
+        {
+            // Guardamos la nueva dirección.
+            heldDirection = inputDirection;
+
+            // Movemos inmediatamente una posición.
+            MoveSelection(heldDirection);
+
+            // Esperamos un poco antes
+            // de empezar la repetición automática.
+            nextRepeatTime =
+                Time.unscaledTime + initialRepeatDelay;
+        }
+
+        // Si seguimos manteniendo la misma dirección
+        // y ya ha pasado el tiempo necesario...
+        else if (Time.unscaledTime >= nextRepeatTime)
+        {
+            // Movemos otra posición.
+            MoveSelection(heldDirection);
+
+            // Programamos el siguiente movimiento.
+            nextRepeatTime =
+                Time.unscaledTime + repeatInterval;
+        }
+
+
+        // --------------------------------
+        // ROTACIÓN VISUAL
+        // --------------------------------
+
+        // Giramos suavemente la rueda
+        // hacia la nueva posición.
         menuWheel.localRotation =
             Quaternion.RotateTowards(
                 menuWheel.localRotation,
@@ -140,7 +182,7 @@ public class WheelMenuNavigation : MonoBehaviour
     private void MoveSelection(int direction)
     {
         // Avanzamos o retrocedemos
-        // según la dirección recibida.
+        // por los botones.
         currentButtonIndex += direction;
 
 
@@ -159,19 +201,18 @@ public class WheelMenuNavigation : MonoBehaviour
         }
 
 
-        // Seleccionamos el nuevo botón.
+        // Seleccionamos el botón correspondiente.
         SelectButton(currentButtonIndex);
 
-        // Actualizamos la rotación de la rueda
-        // para que el botón seleccionado quede arriba.
+        // Actualizamos hacia dónde debe girar la rueda.
         UpdateTargetRotation();
     }
 
 
     private void SelectButton(int index)
     {
-        // Indicamos al EventSystem
-        // qué botón está seleccionado.
+        // Marcamos el botón como seleccionado
+        // dentro del EventSystem de Unity.
         EventSystem.current.SetSelectedGameObject(
             menuButtons[index].gameObject
         );
@@ -180,8 +221,8 @@ public class WheelMenuNavigation : MonoBehaviour
 
     private void UpdateTargetRotation()
     {
-        // Calculamos la rotación necesaria
-        // para colocar el botón seleccionado arriba.
+        // Calculamos el ángulo necesario
+        // para dejar la opción seleccionada arriba.
         float targetAngle =
             currentButtonIndex * anglePerButton;
 
