@@ -345,10 +345,14 @@ MonoBehaviour:
   - {fileID: 8594520047533539134}
   - {fileID: 8594520047533539135}
   - {fileID: 8594520047533539136}
+  backButton: {fileID: 0}
   menuWheel: {fileID: 55615769}
   rotationSpeed: 500
   anglePerButton: 90
   steeringThreshold: 0.4
+  pedalPressedThreshold: -0.1
+  initialRepeatDelay: 0.4
+  repeatInterval: 0.2
 --- !u!1 &1985564664
 GameObject:
   m_ObjectHideFlags: 0
