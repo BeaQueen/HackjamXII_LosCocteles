@@ -38,6 +38,10 @@ MonoBehaviour:
     m_Localized: Cambiar Idioma
     m_Metadata:
       m_Items: []
+  - m_Id: 8714117869568
+    m_Localized: "Volver al Men\xFA"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
