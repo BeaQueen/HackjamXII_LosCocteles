@@ -8,73 +8,86 @@ using UnityEngine.Localization.Settings;
 public class LanguageDropdown : MonoBehaviour
 {
     // Referencia al Dropdown de TextMeshPro.
+    // Arrastraremos el propio Dropdown aquí desde el Inspector.
     [SerializeField]
     private TMP_Dropdown languageDropdown;
 
-    // Aquí guardaremos todos los idiomas disponibles que encuentre el sistema de Localization.
-    private List<Locale> availableLocales = new List<Locale>();
-
     private IEnumerator Start()
     {
-        // Esperamos a que el sistema de Localization  haya terminado de inicializarse.
+        // Esperamos a que Unity Localization haya terminado
+        // de cargar todos los idiomas disponibles.
         yield return LocalizationSettings.InitializationOperation;
 
-        // Guardamos todos los Locales que tengamos creados en Localization Settings.
-        availableLocales.AddRange(
-            LocalizationSettings.AvailableLocales.Locales
-        );
+        // Creamos una lista para guardar las opciones
+        // que aparecerán en el Dropdown.
+        List<TMP_Dropdown.OptionData> options =
+            new List<TMP_Dropdown.OptionData>();
 
-        // Borramos las opciones que trae el Dropdown por defecto.
-        languageDropdown.ClearOptions();
+        // Guardaremos aquí el índice del idioma
+        // que está seleccionado actualmente.
+        int selectedIndex = 0;
 
-        // Lista con los nombres que aparecerán dentro del Dropdown.
-        List<string> languageNames = new List<string>();
-
-        // Recorremos todos los idiomas disponibles.
-        foreach (Locale locale in availableLocales)
+        // Recorremos todos los Locales disponibles
+        // configurados en Localization Settings.
+        for (int i = 0;
+             i < LocalizationSettings.AvailableLocales.Locales.Count;
+             i++)
         {
-            // Añadimos el nombre de cada Locale
-            languageNames.Add(locale.LocaleName);
+            Locale locale =
+                LocalizationSettings.AvailableLocales.Locales[i];
+
+            // Añadimos el nombre del idioma al Dropdown.
+            options.Add(
+                new TMP_Dropdown.OptionData(locale.LocaleName)
+            );
+
+            // Si este Locale es el que está actualmente activo,
+            // guardamos su posición.
+            if (LocalizationSettings.SelectedLocale == locale)
+            {
+                selectedIndex = i;
+            }
         }
 
-        // Añadimos los idiomas encontrados al Dropdown.
-        languageDropdown.AddOptions(languageNames);
+        // Sustituimos las opciones que trae el Dropdown
+        // por defecto por nuestros idiomas.
+        languageDropdown.options = options;
 
-        // Buscamos qué idioma está actualmente seleccionado.
-        int currentLocaleIndex =
-            availableLocales.IndexOf(LocalizationSettings.SelectedLocale);
+        // Mostramos en el Dropdown el idioma
+        // que está actualmente seleccionado.
+        languageDropdown.SetValueWithoutNotify(selectedIndex);
 
-        // Si encontramos el idioma actual...
-        if (currentLocaleIndex >= 0)
-        {
-            // Hacemos que el Dropdown muestre ese idioma sin disparar el evento de cambio.
-            languageDropdown.SetValueWithoutNotify(currentLocaleIndex);
-        }
-
-        // Actualizamos visualmente el texto mostrado.
+        // Actualizamos visualmente el Dropdown.
         languageDropdown.RefreshShownValue();
 
-        // Cada vez que el usuario cambie una opción llamaremos a ChangeLanguage().
+        // Cuando el usuario seleccione otro idioma,
+        // llamamos a ChangeLanguage().
         languageDropdown.onValueChanged.AddListener(ChangeLanguage);
+
+        // Mensaje de prueba.
+        Debug.Log(
+            "Idioma inicial: " +
+            LocalizationSettings.SelectedLocale.LocaleName
+        );
     }
 
-    // Cambia el idioma del juego.
-
+    // Esta función recibe el índice seleccionado
+    // dentro del Dropdown.
     private void ChangeLanguage(int index)
     {
-        // Comprobamos que el índice sea válido.
-        if (index < 0 || index >= availableLocales.Count)
-        {
-            return;
-        }
+        // Obtenemos el Locale correspondiente
+        // directamente de Localization Settings.
+        Locale selectedLocale =
+            LocalizationSettings.AvailableLocales.Locales[index];
 
-        // Cambiamos el Locale activo.
-        LocalizationSettings.SelectedLocale = availableLocales[index];
-    }
+        // Cambiamos el idioma global del juego.
+        LocalizationSettings.SelectedLocale = selectedLocale;
 
-    private void OnDestroy()
-    {
-        // Quitamos el listener cuando se destruye el objeto  para evitar referencias innecesarias.
-        languageDropdown.onValueChanged.RemoveListener(ChangeLanguage);
+        // Esto nos permitirá comprobar en Console
+        // que realmente se ha cambiado.
+        Debug.Log(
+            "Locale cambiado a: " +
+            LocalizationSettings.SelectedLocale.LocaleName
+        );
     }
 }
