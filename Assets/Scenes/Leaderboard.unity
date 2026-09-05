@@ -119,6 +119,17 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &352148027 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 701174494049984117, guid: 112b214304c3a894c8983d211b6da216, type: 3}
+  m_PrefabInstance: {fileID: 5049877648311933945}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a665468be3bc4e7499e5fa6f2ec807e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LetterCarousel
 --- !u!1 &443023576
 GameObject:
   m_ObjectHideFlags: 0
@@ -198,6 +209,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &810737699 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8999568202551204498, guid: 112b214304c3a894c8983d211b6da216, type: 3}
+  m_PrefabInstance: {fileID: 5049877648311933945}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a665468be3bc4e7499e5fa6f2ec807e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LetterCarousel
 --- !u!1 &960476618
 GameObject:
   m_ObjectHideFlags: 0
@@ -417,6 +439,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1955914507 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8451293938730896875, guid: 112b214304c3a894c8983d211b6da216, type: 3}
+  m_PrefabInstance: {fileID: 5049877648311933945}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a665468be3bc4e7499e5fa6f2ec807e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
 --- !u!1001 &5049877648311933945
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -526,6 +559,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: LeaderboardInput
       objectReference: {fileID: 0}
+    - target: {fileID: 2997917205547480716, guid: 0853ce68821b1b646bccb4c08bd0f1be, type: 3}
+      propertyPath: 'letterCarousels.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1955914507}
+    - target: {fileID: 2997917205547480716, guid: 0853ce68821b1b646bccb4c08bd0f1be, type: 3}
+      propertyPath: 'letterCarousels.Array.data[1]'
+      value: 
+      objectReference: {fileID: 810737699}
+    - target: {fileID: 2997917205547480716, guid: 0853ce68821b1b646bccb4c08bd0f1be, type: 3}
+      propertyPath: 'letterCarousels.Array.data[2]'
+      value: 
+      objectReference: {fileID: 352148027}
     - target: {fileID: 8882077742831697964, guid: 0853ce68821b1b646bccb4c08bd0f1be, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1048.5664
