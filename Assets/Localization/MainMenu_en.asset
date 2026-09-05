@@ -42,6 +42,22 @@ MonoBehaviour:
     m_Localized: Back to Menu
     m_Metadata:
       m_Items: []
+  - m_Id: 378510093217792
+    m_Localized: RACE COMPLETE!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 378578036748288
+    m_Localized: YOUR TIME
+    m_Metadata:
+      m_Items: []
+  - m_Id: 378653882347520
+    m_Localized: YOUR NAME
+    m_Metadata:
+      m_Items: []
+  - m_Id: 395626485805056
+    m_Localized: LEADERBOARD
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

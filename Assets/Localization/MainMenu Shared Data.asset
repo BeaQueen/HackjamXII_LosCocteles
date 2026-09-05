@@ -39,6 +39,22 @@ MonoBehaviour:
     m_Key: MAIN_BACK
     m_Metadata:
       m_Items: []
+  - m_Id: 378510093217792
+    m_Key: END_TITLE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 378578036748288
+    m_Key: END_YOUR_TIME
+    m_Metadata:
+      m_Items: []
+  - m_Id: 378653882347520
+    m_Key: END_YOUR_NAME
+    m_Metadata:
+      m_Items: []
+  - m_Id: 395626485805056
+    m_Key: MENU_LEADERBOARD
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

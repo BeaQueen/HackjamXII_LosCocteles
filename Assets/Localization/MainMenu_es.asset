@@ -42,6 +42,22 @@ MonoBehaviour:
     m_Localized: "Volver al Men\xFA"
     m_Metadata:
       m_Items: []
+  - m_Id: 378510093217792
+    m_Localized: "\xA1CARRERA COMPLETADA!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 378578036748288
+    m_Localized: TU TIEMPO
+    m_Metadata:
+      m_Items: []
+  - m_Id: 378653882347520
+    m_Localized: TU NOMBRE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 395626485805056
+    m_Localized: "TABLA DE PUNTUACI\xD3N"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
