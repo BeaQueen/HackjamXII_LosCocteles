@@ -335,12 +335,21 @@ public class LogicaConductor : MonoBehaviour
 
         ayudaOrientacion = false;
     }
-   
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.gameObject.TryGetComponent(out IColision objetoConQueColisiono))
+        Debug.Log(other.transform.gameObject.name);
+        if (other.gameObject.TryGetComponent(out IColision objetoConQueColisiono))
         {
             objetoConQueColisiono.Colision(gameObject);
         }
     }
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        Debug.Log(hit.transform.gameObject.name);
+        if (hit.gameObject.TryGetComponent(out IColision objetoConQueColisiono))
+        {
+            objetoConQueColisiono.Colision(gameObject);
+        }
+    }
+
 }
