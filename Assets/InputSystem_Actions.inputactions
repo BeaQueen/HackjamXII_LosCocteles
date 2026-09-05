@@ -62,8 +62,8 @@
                 },
                 {
                     "name": "",
-                    "id": "6f170e8e-31e6-4f17-8d62-335042d9fbd2",
-                    "path": "<Joystick>/stick",
+                    "id": "b296eb89-6c86-4f08-9dae-f7188e4006aa",
+                    "path": "<HID::Logitech G923 Racing Wheel for PlayStation and PC>/stick",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
