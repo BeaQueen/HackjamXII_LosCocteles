@@ -15,6 +15,6 @@ public class Interfaces : MonoBehaviour
     }
     public interface IColision 
     {
-        void Colision(GameObject jugador);
+        void Colision(GameObject jugador,Vector3 direccionColision);
     }
 }

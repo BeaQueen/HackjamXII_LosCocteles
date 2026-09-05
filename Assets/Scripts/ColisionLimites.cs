@@ -5,21 +5,29 @@ public class ColisionLimites : MonoBehaviour , IColision
 {
     LogicaConductor scriptJugador;
     [SerializeField] Transform direccionOrientacion;
-    public void Colision(GameObject jugador)
+   
+
+    public void Colision(GameObject jugador, Vector3 direccionColision)
     {
-         scriptJugador=jugador.GetComponent<LogicaConductor>();
-        scriptJugador.ReducirRevoluciones(4);
-        
-       scriptJugador.Orientarse(direccionOrientacion.transform.forward,0.1f,jugador.transform);//orientamos segun una referencia que tiene esta colision
-       // scriptJugador.Impulso(direccionOrientacion.transform.forward, 20);
-        scriptJugador.puedoGirar=false;
+        scriptJugador = jugador.GetComponent<LogicaConductor>();
+        scriptJugador.ReducirRevoluciones();
+        scriptJugador.orientarPorGolpe = true;
+        //scriptJugador.Orientarse(direccionColision, 0.1f, jugador.transform);//orientamos segun una referencia que tiene esta colision
+        scriptJugador.direccionOrientacionPorGolpe = direccionColision+direccionOrientacion.forward;                                                                                     // scriptJugador.Impulso(direccionOrientacion.transform.forward, 20);
+        scriptJugador.puedoGirar = false;
+        scriptJugador.puedoPisarAcelerador = false;
+        scriptJugador.acelerando = false;
+        scriptJugador.acelerador = 1;
+        scriptJugador.multiplicador = 0;
 
         Invoke("PermitirGirarJugador", 0.3F);
     }
 
     void PermitirGirarJugador()
     {
+        scriptJugador.orientarPorGolpe=false;
         scriptJugador.puedoGirar=true;
+        scriptJugador.puedoPisarAcelerador=true;
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

@@ -5,10 +5,12 @@ using static Interfaces;
 public class Portal : MonoBehaviour, IColision
 {
     [SerializeField] GameObject camara;
-    public void Colision(GameObject jugador)
+   
+
+    public void Colision(GameObject jugador, Vector3 direccionColision)
     {
         camara.GetComponent<Animator>().SetTrigger("Blanco");
-        SceneManager.LoadScene("Race");
+        SceneManager.LoadScene("Leaderboard");
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created

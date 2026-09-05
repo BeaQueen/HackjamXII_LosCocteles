@@ -5,7 +5,7 @@ using static Interfaces;
 
 public class LogicaConductor : MonoBehaviour
 {
-    float acelerador;
+   public float acelerador;
     float freno;
     Vector2 giro;
     [SerializeField] float rotacionY;
@@ -21,9 +21,9 @@ public class LogicaConductor : MonoBehaviour
     [SerializeField] float offsetDerrape;
     
 
-    float multiplicador;
+   public float multiplicador;
     float multiplicadorFreno;
-    [SerializeField] bool acelerando;
+    public bool acelerando;
     [SerializeField] bool frenando;
    public bool puedoGirar;
     [SerializeField] bool puedoGirarDerrape;
@@ -50,6 +50,9 @@ public class LogicaConductor : MonoBehaviour
     CharacterController controlador;
     [SerializeField] GameObject camara;
    [SerializeField] Vector3 direccionLocal;
+   public bool puedoPisarAcelerador;
+    public bool orientarPorGolpe;
+    public Vector3 direccionOrientacionPorGolpe;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -138,11 +141,19 @@ public class LogicaConductor : MonoBehaviour
 
         Movimiento();
          Girar();
-       // FillAmount();
+        // FillAmount();
+        if (orientarPorGolpe)
+        {
+            OrientarsePorGolpe(direccionOrientacionPorGolpe, 0.1f, transform);
+        }
     }
     public void Acelador(InputAction.CallbackContext context)
     {
-       acelerador= context.ReadValue<float>();
+        if (puedoPisarAcelerador)
+        {
+         acelerador= context.ReadValue<float>();
+
+        }
       
     }
     public void Freno(InputAction.CallbackContext context)
@@ -205,15 +216,15 @@ public class LogicaConductor : MonoBehaviour
             camaraVelocidadAlta.SetActive(false);
         }
     }
-    public void ReducirRevoluciones(float cantidadAReducir)
+    public void ReducirRevoluciones()
     {
-        revoluciones=revoluciones-cantidadAReducir;//quitamos revoluciones
+        revoluciones=0;//quitamos revoluciones
         acelerador = 0;//acelerador a 0
-        if (revoluciones<0)
-        {
-            revoluciones = 0;
-        }
+      
+       
+       
     }
+   
    public void Orientarse(Vector3 direccion, float Smoth, Transform objetoAOrientar)
     {
 
@@ -228,6 +239,26 @@ public class LogicaConductor : MonoBehaviour
             objetoAOrientar.eulerAngles = new Vector3(0, anguloSuave, 0);
 
         
+
+
+
+
+
+    }
+    public void OrientarsePorGolpe(Vector3 direccion, float Smoth, Transform objetoAOrientar)
+    {
+
+        //Arcotangente,convierte la rotacion en grados ,para saber que rotacion ponerle a mi personaje
+        float angulo = Mathf.Atan2(direccion.x * 1, direccion.z * 1) * Mathf.Rad2Deg;//el calculo me lo dan en radios ...Y LO TENGO QUE CONVERTIR A RADIANES
+
+
+
+        float anguloSuave = Mathf.SmoothDampAngle(objetoAOrientar.eulerAngles.y, angulo, ref velocidadRotacionRef, Smoth);//vamos a crear una interpolacion entre el angulo al que estamos mirando y al angulo hacia el que vamos a mirar , con una velocidad de rotacion y un  Smootheado
+
+
+        objetoAOrientar.eulerAngles = new Vector3(0, anguloSuave, 0);
+
+
 
 
 
@@ -341,7 +372,7 @@ public class LogicaConductor : MonoBehaviour
         Debug.Log(other.transform.gameObject.name);
         if (other.gameObject.TryGetComponent(out IColision objetoConQueColisiono))
         {
-            objetoConQueColisiono.Colision(gameObject);
+            objetoConQueColisiono.Colision(gameObject, new Vector3(0,0,0));
         }
     }
     private void OnControllerColliderHit(ControllerColliderHit hit)
@@ -349,7 +380,8 @@ public class LogicaConductor : MonoBehaviour
         Debug.Log(hit.transform.gameObject.name);
         if (hit.gameObject.TryGetComponent(out IColision objetoConQueColisiono))
         {
-            objetoConQueColisiono.Colision(gameObject);
+            
+            objetoConQueColisiono.Colision(gameObject,hit.normal);
         }
     }
 
