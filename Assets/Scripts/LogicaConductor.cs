@@ -13,7 +13,8 @@ public class LogicaConductor : MonoBehaviour
     [SerializeField] Transform ruedasAGirarDerrape;
     [SerializeField] float velocidadDeMovimiento;
     [SerializeField] float multiplicadorGiro;
-  [SerializeField]  float multiplicadorVelocidad;
+  [SerializeField]  float revoluciones;
+    [SerializeField] float multiplicadorVelocidad;
     float multiplicadorVelocidadMaxima=10;
     [SerializeField] float offsetDerrape;
     
@@ -28,6 +29,7 @@ public class LogicaConductor : MonoBehaviour
     [SerializeField] Image fillAmountRevoluciones;
     float velocidadRotacionRef;
     [SerializeField] float smothGiro;
+    [SerializeField] float smothGiroDerrape;
     [SerializeField] PolvoCoche scriptPolvoCoche;
     [SerializeField] Animator animCoche;
 
@@ -48,7 +50,7 @@ public class LogicaConductor : MonoBehaviour
         //Debug.Log(freno);
         Debug.Log(acelerador);
         Debug.Log(giro.x);
-        if (giro.x>-0.05&&giro.x<0.05)
+        if (giro.x>-0.01&&giro.x<0.01)
         {
             Orientarse(transform.forward, 0, ruedasAGirar.transform);
             Orientarse(transform.forward, 0, ruedasAGirarDerrape.transform);
@@ -93,7 +95,7 @@ public class LogicaConductor : MonoBehaviour
 
         if (acelerando == true)
         {
-           multiplicadorVelocidad = multiplicadorVelocidad + 2*multiplicador * Time.deltaTime ;
+           revoluciones = revoluciones + 2*multiplicador * Time.deltaTime ;
            
 
         }
@@ -102,18 +104,18 @@ public class LogicaConductor : MonoBehaviour
            
             if (frenando==false)
             {
-              multiplicadorVelocidad = multiplicadorVelocidad -2 * Time.deltaTime;
+              revoluciones =revoluciones -2 * Time.deltaTime;
 
             }
             else
             {
-                multiplicadorVelocidad = multiplicadorVelocidad - 2 *multiplicadorFreno* Time.deltaTime;
+                revoluciones = revoluciones - 2 *multiplicadorFreno* Time.deltaTime;
             }
         }
 
 
        
-         multiplicadorVelocidad = Mathf.Clamp(multiplicadorVelocidad,0,multiplicadorVelocidadMaxima);
+         revoluciones = Mathf.Clamp(revoluciones,0,multiplicadorVelocidadMaxima);
         multiplicadorFreno = Mathf.Clamp(multiplicadorFreno, 0, 10);
 
         CamarasVelocidad();
@@ -122,7 +124,7 @@ public class LogicaConductor : MonoBehaviour
 
         Movimiento();
          Girar();
-        FillAmount();
+       // FillAmount();
     }
     public void Acelador(InputAction.CallbackContext context)
     {
@@ -161,22 +163,22 @@ public class LogicaConductor : MonoBehaviour
         else if (freno != 1)
         {
             frenando = true;
-            multiplicadorFreno = multiplicadorFreno + 5 * Time.deltaTime * Mathf.Abs(freno);
+            multiplicadorFreno = multiplicadorFreno + 10 * Time.deltaTime * Mathf.Abs(freno);
         }
 
     }
     void FillAmount()
     {
-        fillAmountRevoluciones.fillAmount = multiplicadorVelocidad / multiplicadorVelocidadMaxima;
+        fillAmountRevoluciones.fillAmount = revoluciones / multiplicadorVelocidadMaxima;
        
     }
     void CamarasVelocidad()
     {
-        if (multiplicadorVelocidad>5)
+        if (revoluciones>5)
         {
             camaraVelocidadAlta.SetActive(true);
         }
-        else if(multiplicadorVelocidad < 5)
+        else if(revoluciones < 5)
         {
             camaraVelocidadAlta.SetActive(false);
         }
@@ -203,7 +205,7 @@ public class LogicaConductor : MonoBehaviour
     }
     void Movimiento()
     {
-            transform.Translate(new Vector3(0,0,1*multiplicadorVelocidad)*Time.deltaTime);
+            transform.Translate(new Vector3(0,0,multiplicadorVelocidad*revoluciones)*Time.deltaTime);
        
       
     }
@@ -218,7 +220,7 @@ public class LogicaConductor : MonoBehaviour
           ruedasAGirar.eulerAngles = new Vector3(0, giro.x * multiplicadorGiro+transform.rotation.eulerAngles.y, 0);//hay giro
           //  ruedasAGirarDerrape.eulerAngles = new Vector3(0, giro.x * multiplicadorGiro+offsetDerrape + transform.rotation.eulerAngles.y, 0);//hay giro
            
-            if (multiplicadorVelocidad > 0)//si hay velocidad...
+            if (revoluciones > 0)//si hay velocidad...
             {
                 if (puedoGirarDerrape)
                 {
@@ -233,14 +235,15 @@ public class LogicaConductor : MonoBehaviour
                     {
                         animCoche.SetBool("DerrapeIzquierda", true);
                     }
+                    Orientarse(ruedasAGirar.transform.forward, smothGiroDerrape, transform);//orientate segun esa direccion
                 }
                 else
                 {
                     animCoche.SetBool("DerrapeDerecha", false);
                     animCoche.SetBool("DerrapeIzquierda", false);
+                     Orientarse(ruedasAGirar.transform.forward, smothGiro, transform);//orientate segun esa direccion
                 }
 
-                Orientarse(ruedasAGirar.transform.forward, smothGiro, transform);//orientate segun esa direccion
 
                 
 
