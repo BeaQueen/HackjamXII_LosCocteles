@@ -121,6 +121,26 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""initialStateCheck"": true,
                     ""priority"": 0
+                },
+                {
+                    ""name"": ""GatilloIzquierdo"",
+                    ""type"": ""Button"",
+                    ""id"": ""e42cedca-b328-4036-9492-d3a216da17e2"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
+                },
+                {
+                    ""name"": ""GatilloDerecho"",
+                    ""type"": ""Button"",
+                    ""id"": ""69915f18-5305-4993-a2b4-c917b4891a0c"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
                 }
             ],
             ""bindings"": [
@@ -211,6 +231,28 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""action"": ""Volante"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1062837e-0b7d-47cb-9184-bf581fe46204"",
+                    ""path"": ""<HID::Logitech G923 Racing Wheel for PlayStation and PC>/button6"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""GatilloIzquierdo"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c18fdeda-8bea-47be-abf0-2be3ca4a6ca0"",
+                    ""path"": ""<HID::Logitech G923 Racing Wheel for PlayStation and PC>/button5"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""GatilloDerecho"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -354,6 +396,8 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Controlador_Acelerador = m_Controlador.FindAction("Acelerador", throwIfNotFound: true);
         m_Controlador_Freno = m_Controlador.FindAction("Freno", throwIfNotFound: true);
         m_Controlador_Volante = m_Controlador.FindAction("Volante", throwIfNotFound: true);
+        m_Controlador_GatilloIzquierdo = m_Controlador.FindAction("GatilloIzquierdo", throwIfNotFound: true);
+        m_Controlador_GatilloDerecho = m_Controlador.FindAction("GatilloDerecho", throwIfNotFound: true);
         // Menu
         m_Menu = asset.FindActionMap("Menu", throwIfNotFound: true);
         m_Menu_Aceptar = m_Menu.FindAction("Aceptar", throwIfNotFound: true);
@@ -443,6 +487,8 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Controlador_Acelerador;
     private readonly InputAction m_Controlador_Freno;
     private readonly InputAction m_Controlador_Volante;
+    private readonly InputAction m_Controlador_GatilloIzquierdo;
+    private readonly InputAction m_Controlador_GatilloDerecho;
     /// <summary>
     /// Provides access to input actions defined in input action map "Controlador".
     /// </summary>
@@ -466,6 +512,14 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Controlador/Volante".
         /// </summary>
         public InputAction @Volante => m_Wrapper.m_Controlador_Volante;
+        /// <summary>
+        /// Provides access to the underlying input action "Controlador/GatilloIzquierdo".
+        /// </summary>
+        public InputAction @GatilloIzquierdo => m_Wrapper.m_Controlador_GatilloIzquierdo;
+        /// <summary>
+        /// Provides access to the underlying input action "Controlador/GatilloDerecho".
+        /// </summary>
+        public InputAction @GatilloDerecho => m_Wrapper.m_Controlador_GatilloDerecho;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -501,6 +555,12 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Volante.started += instance.OnVolante;
             @Volante.performed += instance.OnVolante;
             @Volante.canceled += instance.OnVolante;
+            @GatilloIzquierdo.started += instance.OnGatilloIzquierdo;
+            @GatilloIzquierdo.performed += instance.OnGatilloIzquierdo;
+            @GatilloIzquierdo.canceled += instance.OnGatilloIzquierdo;
+            @GatilloDerecho.started += instance.OnGatilloDerecho;
+            @GatilloDerecho.performed += instance.OnGatilloDerecho;
+            @GatilloDerecho.canceled += instance.OnGatilloDerecho;
         }
 
         /// <summary>
@@ -521,6 +581,12 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Volante.started -= instance.OnVolante;
             @Volante.performed -= instance.OnVolante;
             @Volante.canceled -= instance.OnVolante;
+            @GatilloIzquierdo.started -= instance.OnGatilloIzquierdo;
+            @GatilloIzquierdo.performed -= instance.OnGatilloIzquierdo;
+            @GatilloIzquierdo.canceled -= instance.OnGatilloIzquierdo;
+            @GatilloDerecho.started -= instance.OnGatilloDerecho;
+            @GatilloDerecho.performed -= instance.OnGatilloDerecho;
+            @GatilloDerecho.canceled -= instance.OnGatilloDerecho;
         }
 
         /// <summary>
@@ -765,6 +831,20 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnVolante(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "GatilloIzquierdo" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnGatilloIzquierdo(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "GatilloDerecho" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnGatilloDerecho(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Menu" which allows adding and removing callbacks.

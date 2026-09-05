@@ -35,6 +35,26 @@
                     "interactions": "",
                     "initialStateCheck": true,
                     "priority": 0
+                },
+                {
+                    "name": "GatilloIzquierdo",
+                    "type": "Button",
+                    "id": "e42cedca-b328-4036-9492-d3a216da17e2",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
+                },
+                {
+                    "name": "GatilloDerecho",
+                    "type": "Button",
+                    "id": "69915f18-5305-4993-a2b4-c917b4891a0c",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false,
+                    "priority": 0
                 }
             ],
             "bindings": [
@@ -125,6 +145,28 @@
                     "action": "Volante",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "1062837e-0b7d-47cb-9184-bf581fe46204",
+                    "path": "<HID::Logitech G923 Racing Wheel for PlayStation and PC>/button6",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "GatilloIzquierdo",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c18fdeda-8bea-47be-abf0-2be3ca4a6ca0",
+                    "path": "<HID::Logitech G923 Racing Wheel for PlayStation and PC>/button5",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "GatilloDerecho",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },

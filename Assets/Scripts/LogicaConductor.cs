@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using static Interfaces;
 
 public class LogicaConductor : MonoBehaviour
 {
@@ -24,7 +25,7 @@ public class LogicaConductor : MonoBehaviour
     float multiplicadorFreno;
     [SerializeField] bool acelerando;
     [SerializeField] bool frenando;
-    [SerializeField] bool puedoGirar;
+   public bool puedoGirar;
     [SerializeField] bool puedoGirarDerrape;
     Vector3 nuevoAngulo;
     [SerializeField] Image fillAmountRevoluciones;
@@ -42,12 +43,19 @@ public class LogicaConductor : MonoBehaviour
 
     [SerializeField] GameObject lineasDeVelocidadMaxima;
     [SerializeField] GameObject lineasDeVelocidadTurbo;
+    [SerializeField] bool impulso;
    [SerializeField] bool ayudaOrientacion;
+    Vector3 direccionImpulso;
+    float fuerzaImpulso;
+    CharacterController controlador;
+    [SerializeField] GameObject camara;
+   [SerializeField] Vector3 direccionLocal;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        controlador = GetComponent<CharacterController>();
     }
 
     // Update is called once per frame
@@ -101,7 +109,7 @@ public class LogicaConductor : MonoBehaviour
 
         if (acelerando == true)
         {
-           revoluciones = revoluciones + 2*multiplicador * Time.deltaTime ;
+           revoluciones = revoluciones + 5*multiplicador * Time.deltaTime ;
            
 
         }
@@ -115,7 +123,7 @@ public class LogicaConductor : MonoBehaviour
             }
             else
             {
-                revoluciones = revoluciones - 2 *multiplicadorFreno* Time.deltaTime;
+                revoluciones = revoluciones - 5 *multiplicadorFreno* Time.deltaTime;
             }
         }
 
@@ -197,7 +205,15 @@ public class LogicaConductor : MonoBehaviour
             camaraVelocidadAlta.SetActive(false);
         }
     }
-    void Orientarse(Vector3 direccion, float Smoth, Transform objetoAOrientar)
+    public void ReducirRevoluciones(float cantidadAReducir)
+    {
+        revoluciones=revoluciones-cantidadAReducir;
+        if (revoluciones<0)
+        {
+            revoluciones = 0;
+        }
+    }
+   public void Orientarse(Vector3 direccion, float Smoth, Transform objetoAOrientar)
     {
 
         //Arcotangente,convierte la rotacion en grados ,para saber que rotacion ponerle a mi personaje
@@ -217,11 +233,38 @@ public class LogicaConductor : MonoBehaviour
 
 
     }
+    public void Impulso(Vector3 direccionimpulsoo, float fuerzaImpulsoo)
+    {
+        impulso = true;
+        direccionImpulso = direccionimpulsoo;
+        fuerzaImpulso=fuerzaImpulsoo;
+       
+       
+    }
     void Movimiento()
     {
-            transform.Translate(new Vector3(0,0,multiplicadorVelocidad*revoluciones)*Time.deltaTime);
-       
-      
+        if(impulso==false)
+        {
+            //  transform.Translate(new Vector3(0,0,multiplicadorVelocidad*revoluciones)*Time.deltaTime);
+            direccionLocal = camara.transform.forward * -giro.y + camara.transform.right * giro.x;//cogemos el frente de la camara en torno al movimiento del joystick izquierdo
+            direccionLocal.y = 0;//cancelamos subidas y bajadas con la camara
+            controlador.Move((new Vector3(direccionLocal.x, 0, direccionLocal.z).normalized * multiplicadorVelocidad * revoluciones)*Time.deltaTime ) ;
+           // controlador.
+
+
+        }
+        else
+        {
+            //revoluciones = 0;
+            //transform.Translate(direccionImpulso * fuerzaImpulso * Time.deltaTime);
+            //Invoke("DesactivarImpulso", 2f);
+        }
+
+
+    }
+    void DesactivarImpulso()
+    {
+        impulso=false;
     }
     void Girar()
     {
@@ -291,5 +334,13 @@ public class LogicaConductor : MonoBehaviour
     {
 
         ayudaOrientacion = false;
+    }
+   
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.TryGetComponent(out IColision objetoConQueColisiono))
+        {
+            objetoConQueColisiono.Colision(gameObject);
+        }
     }
 }
