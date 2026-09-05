@@ -45,10 +45,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   letterCarousels: []
-  confirmPanel: {fileID: 0}
-  namePreview: {fileID: 0}
   leftButtonAction: {fileID: -5915490793930864763, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   rightButtonAction: {fileID: 8275921810307924930, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  acceleratorAction: {fileID: -1313113576528111657, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  brakeAction: {fileID: 0}
+  acceleratorAction: {fileID: -4367841166692846218, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  brakeAction: {fileID: 8001411006616221582, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   testRaceTime: 42.583
