@@ -44,7 +44,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5503622fc121db442bb5ee4968ad7380, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  letterCarousels: []
+  letterCarousels:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   leftButtonAction: {fileID: -5915490793930864763, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   rightButtonAction: {fileID: 8275921810307924930, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   acceleratorAction: {fileID: -4367841166692846218, guid: 052faaac586de48259a63d0c4782560b, type: 3}
