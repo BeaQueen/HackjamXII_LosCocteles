@@ -560,6 +560,10 @@ PrefabInstance:
       value: LeaderboardInput
       objectReference: {fileID: 0}
     - target: {fileID: 2997917205547480716, guid: 0853ce68821b1b646bccb4c08bd0f1be, type: 3}
+      propertyPath: mainMenuSceneName
+      value: Menu
+      objectReference: {fileID: 0}
+    - target: {fileID: 2997917205547480716, guid: 0853ce68821b1b646bccb4c08bd0f1be, type: 3}
       propertyPath: 'letterCarousels.Array.data[0]'
       value: 
       objectReference: {fileID: 1955914507}

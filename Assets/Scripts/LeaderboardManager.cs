@@ -1,8 +1,10 @@
+using System.IO;
 using UnityEngine;
 
 public static class LeaderboardManager
 {
-    private const string LeaderboardKey = "Leaderboard";
+    private static string SavePath =>
+        Path.Combine(Application.persistentDataPath, "leaderboard.json");
 
     public static void AddScore(string playerName, float time)
     {
@@ -13,7 +15,7 @@ public static class LeaderboardManager
 
         data.entries.Add(newEntry);
 
-        // En carreras, menos tiempo = mejor posición
+        // Menor tiempo = mejor posición
         data.entries.Sort((a, b) => a.time.CompareTo(b.time));
 
         SaveLeaderboard(data);
@@ -21,30 +23,63 @@ public static class LeaderboardManager
 
     public static LeaderboardData LoadLeaderboard()
     {
-        if (!PlayerPrefs.HasKey(LeaderboardKey))
+        if (!File.Exists(SavePath))
         {
             return new LeaderboardData();
         }
 
-        string json = PlayerPrefs.GetString(LeaderboardKey);
+        try
+        {
+            string json = File.ReadAllText(SavePath);
 
-        LeaderboardData data =
-            JsonUtility.FromJson<LeaderboardData>(json);
+            LeaderboardData data =
+                JsonUtility.FromJson<LeaderboardData>(json);
 
-        return data ?? new LeaderboardData();
+            return data ?? new LeaderboardData();
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError(
+                "Could not load leaderboard: " + e.Message
+            );
+
+            return new LeaderboardData();
+        }
     }
 
     private static void SaveLeaderboard(LeaderboardData data)
     {
-        string json = JsonUtility.ToJson(data);
+        try
+        {
+            string json =
+                JsonUtility.ToJson(data, true);
 
-        PlayerPrefs.SetString(LeaderboardKey, json);
-        PlayerPrefs.Save();
+            File.WriteAllText(SavePath, json);
+
+            Debug.Log(
+                "Leaderboard saved at: " + SavePath
+            );
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError(
+                "Could not save leaderboard: " + e.Message
+            );
+        }
     }
 
     public static void ClearLeaderboard()
     {
-        PlayerPrefs.DeleteKey(LeaderboardKey);
-        PlayerPrefs.Save();
+        if (File.Exists(SavePath))
+        {
+            File.Delete(SavePath);
+        }
+
+        Debug.Log("Leaderboard deleted.");
+    }
+
+    public static string GetSavePath()
+    {
+        return SavePath;
     }
 }

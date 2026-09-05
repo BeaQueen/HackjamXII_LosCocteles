@@ -1,22 +1,37 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class LeaderboardWheelInput : MonoBehaviour
 {
     [Header("Letter selectors")]
-    [SerializeField] private LetterCarousel[] letterCarousels;
+    [SerializeField]
+    private LetterCarousel[] letterCarousels;
 
     [Header("Wheel Inputs")]
-    [SerializeField] private InputActionReference leftButtonAction;
-    [SerializeField] private InputActionReference rightButtonAction;
-    [SerializeField] private InputActionReference acceleratorAction;
-    [SerializeField] private InputActionReference brakeAction;
+    [SerializeField]
+    private InputActionReference leftButtonAction;
+
+    [SerializeField]
+    private InputActionReference rightButtonAction;
+
+    [SerializeField]
+    private InputActionReference acceleratorAction;
+
+    [SerializeField]
+    private InputActionReference brakeAction;
 
     [Header("Testing")]
-    [SerializeField] private float testRaceTime = 42.583f;
+    [SerializeField]
+    private float testRaceTime = 42.583f;
+
+    [Header("Scene")]
+    [SerializeField]
+    private string mainMenuSceneName = "MainMenu";
 
     private int currentSlot = 0;
     private bool scoreSaved = false;
+
 
     private void OnEnable()
     {
@@ -31,6 +46,7 @@ public class LeaderboardWheelInput : MonoBehaviour
         brakeAction.action.Enable();
     }
 
+
     private void OnDisable()
     {
         leftButtonAction.action.performed -= OnLeftPressed;
@@ -44,7 +60,9 @@ public class LeaderboardWheelInput : MonoBehaviour
         brakeAction.action.Disable();
     }
 
-    private void OnLeftPressed(InputAction.CallbackContext context)
+
+    private void OnLeftPressed(
+        InputAction.CallbackContext context)
     {
         if (scoreSaved)
             return;
@@ -52,7 +70,9 @@ public class LeaderboardWheelInput : MonoBehaviour
         letterCarousels[currentSlot].PreviousLetter();
     }
 
-    private void OnRightPressed(InputAction.CallbackContext context)
+
+    private void OnRightPressed(
+        InputAction.CallbackContext context)
     {
         if (scoreSaved)
             return;
@@ -60,23 +80,27 @@ public class LeaderboardWheelInput : MonoBehaviour
         letterCarousels[currentSlot].NextLetter();
     }
 
-    private void OnAcceleratorPressed(InputAction.CallbackContext context)
+
+    private void OnAcceleratorPressed(
+        InputAction.CallbackContext context)
     {
         if (scoreSaved)
             return;
 
-        // Si aún no estamos en la última letra, avanzamos
+        // Pasamos a la siguiente letra
         if (currentSlot < letterCarousels.Length - 1)
         {
             currentSlot++;
             return;
         }
 
-        // Si estamos en la última letra, guardamos directamente
+        // Tercera letra confirmada
         SaveScore();
     }
 
-    private void OnBrakePressed(InputAction.CallbackContext context)
+
+    private void OnBrakePressed(
+        InputAction.CallbackContext context)
     {
         if (scoreSaved)
             return;
@@ -86,6 +110,7 @@ public class LeaderboardWheelInput : MonoBehaviour
             currentSlot--;
         }
     }
+
 
     private string GetPlayerName()
     {
@@ -99,8 +124,14 @@ public class LeaderboardWheelInput : MonoBehaviour
         return playerName;
     }
 
+
     private void SaveScore()
     {
+        if (scoreSaved)
+            return;
+
+        scoreSaved = true;
+
         string playerName = GetPlayerName();
 
         LeaderboardManager.AddScore(
@@ -108,13 +139,13 @@ public class LeaderboardWheelInput : MonoBehaviour
             testRaceTime
         );
 
-        scoreSaved = true;
-
         Debug.Log(
             "SAVED: " +
             playerName +
             " - " +
             testRaceTime
         );
+
+        SceneManager.LoadScene(mainMenuSceneName);
     }
 }
