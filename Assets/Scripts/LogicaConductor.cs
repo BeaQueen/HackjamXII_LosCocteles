@@ -10,11 +10,12 @@ public class LogicaConductor : MonoBehaviour
     [SerializeField] float rotacionY;
     [SerializeField] float rotacionSumando;
     [SerializeField] Transform ruedasAGirar;
+    [SerializeField] Transform ruedasAGirarDerrape;
     [SerializeField] float velocidadDeMovimiento;
     [SerializeField] float multiplicadorGiro;
   [SerializeField]  float multiplicadorVelocidad;
     float multiplicadorVelocidadMaxima=10;
-   
+    [SerializeField] float offsetDerrape;
     
 
     float multiplicador;
@@ -22,10 +23,18 @@ public class LogicaConductor : MonoBehaviour
     [SerializeField] bool acelerando;
     [SerializeField] bool frenando;
     [SerializeField] bool puedoGirar;
+    [SerializeField] bool puedoGirarDerrape;
     Vector3 nuevoAngulo;
     [SerializeField] Image fillAmountRevoluciones;
     float velocidadRotacionRef;
     [SerializeField] float smothGiro;
+    [SerializeField] PolvoCoche scriptPolvoCoche;
+    [SerializeField] Animator animCoche;
+
+    [SerializeField] GameObject camaraVelocidadBaja;
+    [SerializeField] GameObject camaraVelocidadAlta;
+    [SerializeField] GameObject camaraPrimeraPersona;
+    [SerializeField] GameObject camaraTerceraPersona;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -38,16 +47,43 @@ public class LogicaConductor : MonoBehaviour
     {
         //Debug.Log(freno);
         Debug.Log(acelerador);
-        Debug.Log(giro);
+        Debug.Log(giro.x);
         if (giro.x>-0.05&&giro.x<0.05)
         {
             Orientarse(transform.forward, 0, ruedasAGirar.transform);
+            Orientarse(transform.forward, 0, ruedasAGirarDerrape.transform);
+            animCoche.SetBool("DerrapeDerecha", false);
+            animCoche.SetBool("DerrapeIzquierda", false);
+          //  animCoche.SetTrigger("llegaA0");
             puedoGirar = false;
+            puedoGirarDerrape = false;
         }
         else
         {
             puedoGirar= true;
+
         }
+
+         if (giro.x < -0.3 || giro.x > 0.3)//si paso del limite de giro
+        {
+           puedoGirarDerrape = true;
+            if (scriptPolvoCoche != null)
+            {
+                scriptPolvoCoche.ActivarParticulasPolvo();
+
+            }
+        }
+        else if (giro.x > -0.3 || giro.x < 0.3)
+        {
+            puedoGirarDerrape = false;
+            if (scriptPolvoCoche != null)
+            {
+                scriptPolvoCoche.DesactivarParticulasPolvo();
+
+            }
+
+        }
+       
 
         rotacionY = ruedasAGirar.transform.rotation.eulerAngles.y;
 
@@ -58,10 +94,12 @@ public class LogicaConductor : MonoBehaviour
         if (acelerando == true)
         {
            multiplicadorVelocidad = multiplicadorVelocidad + 2*multiplicador * Time.deltaTime ;
+           
 
         }
         else
         {
+           
             if (frenando==false)
             {
               multiplicadorVelocidad = multiplicadorVelocidad -2 * Time.deltaTime;
@@ -72,10 +110,13 @@ public class LogicaConductor : MonoBehaviour
                 multiplicadorVelocidad = multiplicadorVelocidad - 2 *multiplicadorFreno* Time.deltaTime;
             }
         }
+
+
        
          multiplicadorVelocidad = Mathf.Clamp(multiplicadorVelocidad,0,multiplicadorVelocidadMaxima);
         multiplicadorFreno = Mathf.Clamp(multiplicadorFreno, 0, 10);
 
+        CamarasVelocidad();
       
 
 
@@ -129,6 +170,17 @@ public class LogicaConductor : MonoBehaviour
         fillAmountRevoluciones.fillAmount = multiplicadorVelocidad / multiplicadorVelocidadMaxima;
        
     }
+    void CamarasVelocidad()
+    {
+        if (multiplicadorVelocidad>5)
+        {
+            camaraVelocidadAlta.SetActive(true);
+        }
+        else if(multiplicadorVelocidad < 5)
+        {
+            camaraVelocidadAlta.SetActive(false);
+        }
+    }
     void Orientarse(Vector3 direccion, float Smoth, Transform objetoAOrientar)
     {
 
@@ -164,9 +216,33 @@ public class LogicaConductor : MonoBehaviour
         {
           
           ruedasAGirar.eulerAngles = new Vector3(0, giro.x * multiplicadorGiro+transform.rotation.eulerAngles.y, 0);//hay giro
+          //  ruedasAGirarDerrape.eulerAngles = new Vector3(0, giro.x * multiplicadorGiro+offsetDerrape + transform.rotation.eulerAngles.y, 0);//hay giro
+           
             if (multiplicadorVelocidad > 0)//si hay velocidad...
             {
+                if (puedoGirarDerrape)
+                {
+                    //   Orientarse(ruedasAGirar.transform.forward+ ruedasAGirarDerrape.transform.forward, smothGiro, transform);//orientate segun esa direccion
+                    // Orientarse(ruedasAGirarDerrape.transform.forward, smothGiro, ruedasAGirar.transform);
+                    if (giro.x>0)//derecha..
+                    {
+                         animCoche.SetBool("DerrapeDerecha",true);
+
+                    }
+                    else if(giro.x<0)
+                    {
+                        animCoche.SetBool("DerrapeIzquierda", true);
+                    }
+                }
+                else
+                {
+                    animCoche.SetBool("DerrapeDerecha", false);
+                    animCoche.SetBool("DerrapeIzquierda", false);
+                }
+
                 Orientarse(ruedasAGirar.transform.forward, smothGiro, transform);//orientate segun esa direccion
+
+                
 
             }
 
