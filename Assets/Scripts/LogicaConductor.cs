@@ -11,6 +11,7 @@ public class LogicaConductor : MonoBehaviour
     [SerializeField] float rotacionSumando;
     [SerializeField] Transform ruedasAGirar;
     [SerializeField] Transform ruedasAGirarDerrape;
+    [SerializeField] Transform orientacionCamaraAyuda;
     [SerializeField] float velocidadDeMovimiento;
     [SerializeField] float multiplicadorGiro;
   [SerializeField]  float revoluciones;
@@ -30,6 +31,7 @@ public class LogicaConductor : MonoBehaviour
     float velocidadRotacionRef;
     [SerializeField] float smothGiro;
     [SerializeField] float smothGiroDerrape;
+    [SerializeField] float smothGiroImpulsoAyuda;
     [SerializeField] PolvoCoche scriptPolvoCoche;
     [SerializeField] Animator animCoche;
 
@@ -37,6 +39,10 @@ public class LogicaConductor : MonoBehaviour
     [SerializeField] GameObject camaraVelocidadAlta;
     [SerializeField] GameObject camaraPrimeraPersona;
     [SerializeField] GameObject camaraTerceraPersona;
+
+    [SerializeField] GameObject lineasDeVelocidadMaxima;
+    [SerializeField] GameObject lineasDeVelocidadTurbo;
+   [SerializeField] bool ayudaOrientacion;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -152,6 +158,14 @@ public class LogicaConductor : MonoBehaviour
             acelerando = true;
             multiplicador = multiplicador + 5 * Time.deltaTime * Mathf.Abs(acelerador);
         }
+        if (multiplicador>5)
+        {
+            lineasDeVelocidadMaxima.SetActive(true);
+        }
+        else
+        {
+            lineasDeVelocidadMaxima.SetActive(false);
+        }
     }
     void LogicaFreno()
     {
@@ -218,8 +232,10 @@ public class LogicaConductor : MonoBehaviour
         {
           
           ruedasAGirar.eulerAngles = new Vector3(0, giro.x * multiplicadorGiro+transform.rotation.eulerAngles.y, 0);//hay giro
-          //  ruedasAGirarDerrape.eulerAngles = new Vector3(0, giro.x * multiplicadorGiro+offsetDerrape + transform.rotation.eulerAngles.y, 0);//hay giro
-           
+            orientacionCamaraAyuda.eulerAngles= new Vector3(0, giro.x * multiplicadorGiro + transform.rotation.eulerAngles.y, 0)*-1;//hay giro
+                                                                                                                                 //  ruedasAGirar.transform.eulerAngles = new Vector3(0, Mathf.Clamp(ruedasAGirar.transform.eulerAngles.y, -90, 90));
+                                                                                                                                 //  ruedasAGirarDerrape.eulerAngles = new Vector3(0, giro.x * multiplicadorGiro+offsetDerrape + transform.rotation.eulerAngles.y, 0);//hay giro
+
             if (revoluciones > 0)//si hay velocidad...
             {
                 if (puedoGirarDerrape)
@@ -235,21 +251,45 @@ public class LogicaConductor : MonoBehaviour
                     {
                         animCoche.SetBool("DerrapeIzquierda", true);
                     }
-                    Orientarse(ruedasAGirar.transform.forward, smothGiroDerrape, transform);//orientate segun esa direccion
+                    if (ayudaOrientacion==false)
+                    {
+                     Orientarse(ruedasAGirar.transform.forward, smothGiroDerrape, transform);//orientate segun esa direccion
+
+                    }
                 }
                 else
                 {
                     animCoche.SetBool("DerrapeDerecha", false);
                     animCoche.SetBool("DerrapeIzquierda", false);
-                     Orientarse(ruedasAGirar.transform.forward, smothGiro, transform);//orientate segun esa direccion
+                    if (ayudaOrientacion==false)
+                    {
+                      Orientarse(ruedasAGirar.transform.forward, smothGiro, transform);//orientate segun esa direccion
+
+                    }
                 }
 
 
                 
 
             }
+           
 
         }
 
+    }
+    public void OrientacionAyuda()
+    {
+        //if (revoluciones > 4)
+        //{
+        //    ayudaOrientacion = true;
+        //    Orientarse(orientacionCamaraAyuda.transform.forward, smothGiroImpulsoAyuda, transform);//orientate segun esa direccion
+        //    Invoke("TerminarOrientacioAyuda", 0.1f);
+
+        //}
+    }
+    void TerminarOrientacioAyuda()
+    {
+
+        ayudaOrientacion = false;
     }
 }
