@@ -207,7 +207,8 @@ public class LogicaConductor : MonoBehaviour
     }
     public void ReducirRevoluciones(float cantidadAReducir)
     {
-        revoluciones=revoluciones-cantidadAReducir;
+        revoluciones=revoluciones-cantidadAReducir;//quitamos revoluciones
+        acelerador = 0;//acelerador a 0
         if (revoluciones<0)
         {
             revoluciones = 0;
@@ -275,7 +276,7 @@ public class LogicaConductor : MonoBehaviour
         {
           
           ruedasAGirar.eulerAngles = new Vector3(0, giro.x * multiplicadorGiro+transform.rotation.eulerAngles.y, 0);//hay giro
-            orientacionCamaraAyuda.eulerAngles= new Vector3(0, giro.x * multiplicadorGiro + transform.rotation.eulerAngles.y, 0)*-1;//hay giro
+           // orientacionCamaraAyuda.eulerAngles= new Vector3(0, giro.x * multiplicadorGiro + transform.rotation.eulerAngles.y, 0)*-1;//hay giro
                                                                                                                                  //  ruedasAGirar.transform.eulerAngles = new Vector3(0, Mathf.Clamp(ruedasAGirar.transform.eulerAngles.y, -90, 90));
                                                                                                                                  //  ruedasAGirarDerrape.eulerAngles = new Vector3(0, giro.x * multiplicadorGiro+offsetDerrape + transform.rotation.eulerAngles.y, 0);//hay giro
 

@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abb55f1f10b566340bf309a09598fc57, type: 3}
+  m_Name: PP3 3Light
+  m_EditorClassIdentifier: 
+  gradient:
+    serializedVersion: 2
+    key0: {r: 0.22264141, g: 0.1188821, b: 0.1188821, a: 1}
+    key1: {r: 0.4188679, g: 0.29953006, b: 0.29953006, a: 1}
+    key2: {r: 0.4867924, g: 0.4867924, b: 0.4867924, a: 0}
+    key3: {r: 0.645283, g: 0.645283, b: 0.645283, a: 0}
+    key4: {r: 0.8039216, g: 0.8039216, b: 0.8039216, a: 0}
+    key5: {r: 0.85490197, g: 0.9764706, b: 0.973797, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 11180
+    ctime1: 20277
+    ctime2: 34155
+    ctime3: 42482
+    ctime4: 49575
+    ctime5: 65535
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 1
+    m_ColorSpace: 0
+    m_NumColorKeys: 6
+    m_NumAlphaKeys: 2
+  isBakedToTexture: 1

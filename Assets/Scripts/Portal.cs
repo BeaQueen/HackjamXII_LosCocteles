@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using static Interfaces;
 
 public class Portal : MonoBehaviour, IColision
@@ -7,6 +8,7 @@ public class Portal : MonoBehaviour, IColision
     public void Colision(GameObject jugador)
     {
         camara.GetComponent<Animator>().SetTrigger("Blanco");
+        SceneManager.LoadScene("Race");
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created

@@ -9,7 +9,7 @@ public class ColisionLimites : MonoBehaviour , IColision
     {
          scriptJugador=jugador.GetComponent<LogicaConductor>();
         scriptJugador.ReducirRevoluciones(4);
-        Debug.Log("reduzco");
+        
        scriptJugador.Orientarse(direccionOrientacion.transform.forward,0.1f,jugador.transform);//orientamos segun una referencia que tiene esta colision
        // scriptJugador.Impulso(direccionOrientacion.transform.forward, 20);
         scriptJugador.puedoGirar=false;
