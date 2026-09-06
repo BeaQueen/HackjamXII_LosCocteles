@@ -3,11 +3,17 @@ using UnityEngine;
 
 public class LetterCarousel : MonoBehaviour
 {
+    [Header("Texts")]
     [SerializeField] private TMP_Text previousLetterText;
     [SerializeField] private TMP_Text currentLetterText;
     [SerializeField] private TMP_Text nextLetterText;
 
+    [Header("Selection Feedback")]
+    [SerializeField] private Color normalColor = Color.white;
+    [SerializeField] private Color selectedColor = Color.yellow;
+
     private const string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
     private int currentLetterIndex = 0;
 
     private void Start()
@@ -46,13 +52,30 @@ public class LetterCarousel : MonoBehaviour
         if (nextIndex >= alphabet.Length)
             nextIndex = 0;
 
-        previousLetterText.text = alphabet[previousIndex].ToString();
-        currentLetterText.text = alphabet[currentLetterIndex].ToString();
-        nextLetterText.text = alphabet[nextIndex].ToString();
+        previousLetterText.text =
+            alphabet[previousIndex].ToString();
+
+        currentLetterText.text =
+            alphabet[currentLetterIndex].ToString();
+
+        nextLetterText.text =
+            alphabet[nextIndex].ToString();
     }
 
     public char GetCurrentLetter()
     {
         return alphabet[currentLetterIndex];
+    }
+
+    public void SetSelected(bool selected)
+    {
+        if (selected)
+        {
+            currentLetterText.color = selectedColor;
+        }
+        else
+        {
+            currentLetterText.color = normalColor;
+        }
     }
 }

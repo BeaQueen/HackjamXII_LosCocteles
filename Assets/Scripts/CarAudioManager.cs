@@ -18,54 +18,99 @@ public class CarAudioManager : MonoBehaviour
         public AudioClip accelerationClip;
     }
 
+    // =========================================================
+    // CARS
+    // =========================================================
+
     [Header("Cars")]
     [SerializeField] private CarAudioProfile[] cars;
+
+
+    // =========================================================
+    // GENERIC SOUNDS
+    // =========================================================
 
     [Header("Generic Sounds")]
     [SerializeField] private AudioClip brakeClip;
     [SerializeField] private AudioClip skidClip;
     [SerializeField] private AudioClip crashClip;
 
+
+    // =========================================================
+    // INPUT
+    // =========================================================
+
     [Header("Wheel Input")]
     [SerializeField] private InputActionReference brakeAction;
     [SerializeField] private InputActionReference steeringAction;
 
+
+    // =========================================================
+    // ENGINE
+    // =========================================================
+
     [Header("Engine RPM")]
+
     [SerializeField] private float maxRevolutions = 10f;
 
-    [Tooltip("Pitch del motor cuando está al ralentí")]
     [SerializeField] private float idlePitch = 0.75f;
 
-    [Tooltip("Pitch del motor a máximas revoluciones")]
     [SerializeField] private float maxEnginePitch = 1.6f;
 
-    [Tooltip("Volumen del motor al ralentí")]
     [SerializeField] private float idleVolume = 0.35f;
 
-    [Tooltip("Volumen del motor a máximas revoluciones")]
     [SerializeField] private float maxEngineVolume = 0.85f;
 
-    [Tooltip("Suavidad con la que cambia el sonido del motor")]
     [SerializeField] private float engineSmoothness = 5f;
 
+
+    // =========================================================
+    // ACCELERATION
+    // =========================================================
+
+    [Header("Acceleration")]
+
+    [SerializeField] private float accelerationVolume = 0.7f;
+
+
+    // =========================================================
+    // BRAKE
+    // =========================================================
+
     [Header("Brake")]
+
     [SerializeField] private float brakeThreshold = 0.2f;
 
+    [SerializeField] private float brakeVolume = 0.8f;
+
+
+    // =========================================================
+    // SKID
+    // =========================================================
+
     [Header("Skid")]
-    [Tooltip("Giro mínimo del volante para considerar derrape")]
+
     [SerializeField] private float skidSteeringThreshold = 0.3f;
 
-    [Tooltip("Revoluciones mínimas para que pueda sonar el derrape")]
     [SerializeField] private float minimumSkidRevolutions = 1f;
 
     [SerializeField] private float skidVolume = 0.8f;
 
+
+    // =========================================================
+    // CRASH
+    // =========================================================
+
     [Header("Crash")]
-    [Tooltip("Caída brusca de velocidad necesaria para detectar un choque")]
+
     [SerializeField] private float crashSpeedDropThreshold = 7f;
 
-    [Tooltip("Tiempo mínimo entre sonidos de choque")]
     [SerializeField] private float crashCooldown = 0.5f;
+
+
+    // =========================================================
+    // AUDIO SOURCES
+    // =========================================================
 
     private AudioSource startupSource;
     private AudioSource engineSource;
@@ -74,39 +119,35 @@ public class CarAudioManager : MonoBehaviour
     private AudioSource skidSource;
     private AudioSource crashSource;
 
+
+    // =========================================================
+    // ACTIVE CAR
+    // =========================================================
+
     private CarAudioProfile activeProfile;
     private Transform activeCar;
     private LogicaConductor conductor;
 
+
+    // =========================================================
+    // INTERNAL STATE
+    // =========================================================
+
     private Vector3 previousPosition;
     private float previousSpeed;
+
     private float lastCrashTime = -100f;
 
-    private bool wasAccelerating = false;
-    private bool wasBraking = false;
+
+    // =========================================================
+    // UNITY
+    // =========================================================
 
     private void Awake()
     {
         CreateAudioSources();
     }
 
-    private void OnEnable()
-    {
-        if (brakeAction != null)
-            brakeAction.action.Enable();
-
-        if (steeringAction != null)
-            steeringAction.action.Enable();
-    }
-
-    private void OnDisable()
-    {
-        if (brakeAction != null)
-            brakeAction.action.Disable();
-
-        if (steeringAction != null)
-            steeringAction.action.Disable();
-    }
 
     private void Start()
     {
@@ -132,6 +173,7 @@ public class CarAudioManager : MonoBehaviour
         StartCoroutine(StartCarAudio());
     }
 
+
     private void Update()
     {
         if (activeCar == null || conductor == null)
@@ -145,6 +187,11 @@ public class CarAudioManager : MonoBehaviour
 
         previousPosition = activeCar.position;
     }
+
+
+    // =========================================================
+    // FIND CAR
+    // =========================================================
 
     private void FindActiveCar()
     {
@@ -168,6 +215,7 @@ public class CarAudioManager : MonoBehaviour
         }
     }
 
+
     private void FindConductor()
     {
         conductor = activeCar.GetComponent<LogicaConductor>();
@@ -187,13 +235,19 @@ public class CarAudioManager : MonoBehaviour
         if (conductor == null)
         {
             Debug.LogError(
-                "CarAudioManager: No se ha encontrado LogicaConductor en el coche activo."
+                "CarAudioManager: No se ha encontrado LogicaConductor."
             );
         }
     }
 
+
+    // =========================================================
+    // STARTUP
+    // =========================================================
+
     private IEnumerator StartCarAudio()
     {
+        // ARRANQUE: NO LOOP
         if (
             activeProfile != null &&
             activeProfile.startupClip != null
@@ -202,6 +256,7 @@ public class CarAudioManager : MonoBehaviour
             startupSource.clip =
                 activeProfile.startupClip;
 
+            startupSource.loop = false;
             startupSource.Play();
 
             yield return new WaitForSeconds(
@@ -211,6 +266,11 @@ public class CarAudioManager : MonoBehaviour
 
         StartEngineLoop();
     }
+
+
+    // =========================================================
+    // ENGINE
+    // =========================================================
 
     private void StartEngineLoop()
     {
@@ -223,12 +283,15 @@ public class CarAudioManager : MonoBehaviour
         engineSource.clip =
             activeProfile.engineLoopClip;
 
+        // MOTOR: LOOP
         engineSource.loop = true;
+
         engineSource.pitch = idlePitch;
         engineSource.volume = idleVolume;
 
         engineSource.Play();
     }
+
 
     private void UpdateEngine()
     {
@@ -270,28 +333,61 @@ public class CarAudioManager : MonoBehaviour
             );
     }
 
+
+    // =========================================================
+    // ACCELERATION
+    // =========================================================
+
     private void UpdateAcceleration()
     {
-        bool accelerating = conductor.acelerando;
+        bool accelerating =
+            conductor.acelerando;
 
-        if (
-            accelerating &&
-            !wasAccelerating
-        )
+        if (accelerating)
         {
-            if (
-                activeProfile != null &&
-                activeProfile.accelerationClip != null
-            )
-            {
-                accelerationSource.PlayOneShot(
-                    activeProfile.accelerationClip
-                );
-            }
+            StartAcceleration();
         }
-
-        wasAccelerating = accelerating;
+        else
+        {
+            StopAcceleration();
+        }
     }
+
+
+    private void StartAcceleration()
+    {
+        if (
+            activeProfile == null ||
+            activeProfile.accelerationClip == null
+        )
+            return;
+
+        if (accelerationSource.isPlaying)
+            return;
+
+        accelerationSource.clip =
+            activeProfile.accelerationClip;
+
+        // ACELERACIÓN: LOOP
+        accelerationSource.loop = true;
+        accelerationSource.volume = accelerationVolume;
+
+        accelerationSource.Play();
+    }
+
+
+    private void StopAcceleration()
+    {
+        if (accelerationSource.isPlaying)
+        {
+            accelerationSource.Stop();
+        }
+    }
+
+
+    // =========================================================
+    // BRAKE
+    // =========================================================
 
     private void UpdateBrake()
     {
@@ -301,28 +397,60 @@ public class CarAudioManager : MonoBehaviour
         float rawBrake =
             brakeAction.action.ReadValue<float>();
 
-        // En vuestro código:
-        // freno == 1 -> no está pulsado
-        // freno != 1 -> está frenando
+        /*
+         * En vuestro volante:
+         *
+         * 1 = pedal suelto
+         * distinto de 1 = pedal pulsado
+         */
+
         float brakeAmount =
             Mathf.Clamp01(1f - rawBrake);
 
         bool braking =
             brakeAmount > brakeThreshold;
 
-        if (
-            braking &&
-            !wasBraking
-        )
+        if (braking)
         {
-            if (brakeClip != null)
-            {
-                brakeSource.PlayOneShot(brakeClip);
-            }
+            StartBrake();
         }
-
-        wasBraking = braking;
+        else
+        {
+            StopBrake();
+        }
     }
+
+
+    private void StartBrake()
+    {
+        if (brakeClip == null)
+            return;
+
+        if (brakeSource.isPlaying)
+            return;
+
+        brakeSource.clip = brakeClip;
+
+        // FRENO: LOOP
+        brakeSource.loop = true;
+        brakeSource.volume = brakeVolume;
+
+        brakeSource.Play();
+    }
+
+
+    private void StopBrake()
+    {
+        if (brakeSource.isPlaying)
+        {
+            brakeSource.Stop();
+        }
+    }
+
+
+    // =========================================================
+    // SKID
+    // =========================================================
 
     private void UpdateSkid()
     {
@@ -357,6 +485,7 @@ public class CarAudioManager : MonoBehaviour
         }
     }
 
+
     private void StartSkid()
     {
         if (skidClip == null)
@@ -366,11 +495,14 @@ public class CarAudioManager : MonoBehaviour
             return;
 
         skidSource.clip = skidClip;
+
+        // DERRAPE: LOOP
         skidSource.loop = true;
         skidSource.volume = skidVolume;
 
         skidSource.Play();
     }
+
 
     private void StopSkid()
     {
@@ -379,6 +511,11 @@ public class CarAudioManager : MonoBehaviour
             skidSource.Stop();
         }
     }
+
+
+    // =========================================================
+    // CRASH
+    // =========================================================
 
     private void UpdateCrashDetection()
     {
@@ -418,13 +555,24 @@ public class CarAudioManager : MonoBehaviour
         previousSpeed = currentSpeed;
     }
 
+
     private void PlayCrash()
     {
         if (crashClip == null)
             return;
 
-        crashSource.PlayOneShot(crashClip);
+        // CHOQUE: ONE SHOT
+        crashSource.loop = false;
+
+        crashSource.PlayOneShot(
+            crashClip
+        );
     }
+
+
+    // =========================================================
+    // AUDIO SOURCES
+    // =========================================================
 
     private void CreateAudioSources()
     {
@@ -447,12 +595,15 @@ public class CarAudioManager : MonoBehaviour
             CreateAudioSource();
     }
 
+
     private AudioSource CreateAudioSource()
     {
         AudioSource source =
             gameObject.AddComponent<AudioSource>();
 
         source.playOnAwake = false;
+
+        // Sonido 2D porque es el coche del jugador
         source.spatialBlend = 0f;
 
         return source;
