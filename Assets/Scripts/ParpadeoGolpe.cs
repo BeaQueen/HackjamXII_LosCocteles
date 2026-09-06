@@ -42,9 +42,17 @@ public class ParpadeoGolpe : MonoBehaviour
         {
             renderer[i].enabled = true;//desactivamos el renderer por un tiempo
         }
+        yield return new WaitForSeconds(0.5f);
         for (int i = 0; i < renderer.Count; i++)
         {
             renderer[i].enabled = false;//desactivamos el renderer por un tiempo
+
         }
+        yield return new WaitForSeconds(0.5f);
+        for (int i = 0; i < renderer.Count; i++)
+        {
+            renderer[i].enabled = true;//desactivamos el renderer por un tiempo
+        }
+
     }
 }

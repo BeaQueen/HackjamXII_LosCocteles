@@ -17,4 +17,14 @@ public class Interfaces : MonoBehaviour
     {
         void Colision(GameObject jugador,Vector3 direccionColision);
     }
+    public class TipoDeCoche:MonoBehaviour
+    {
+        public Coche tipoDeCoche;
+        public enum Coche
+        {
+            Pasado,
+            Presente,
+            Futuro
+        }
+    }
 }

@@ -8,10 +8,12 @@ public class Portal : MonoBehaviour, IColision
     [SerializeField] GameObject camara;
     [SerializeField] GameObject mundoADesactivar;
     [SerializeField] GameObject mundoACambiar;
+    [SerializeField] bool esBrechaFinal;
    
 
     public void Colision(GameObject jugador, Vector3 direccionColision)
     {
+        
         StartCoroutine(CambioDeMundo());
       //  camara.GetComponent<Animator>().SetBool("Blanco",true);
        // SceneManager.LoadScene("Leaderboard");
@@ -31,9 +33,18 @@ public class Portal : MonoBehaviour, IColision
     IEnumerator CambioDeMundo()
     {
         camara.GetComponent<Animator>().SetBool("Blanco", true);
+
         yield return new WaitForSeconds(2);
-        mundoADesactivar.SetActive(false);
-        mundoACambiar.SetActive(true);
-        camara.GetComponent<Animator>().SetBool("Blanco", false);
+        if (esBrechaFinal )
+        {
+            SceneManager.LoadScene("Leaderboard");
+        }
+        else
+        {
+            mundoADesactivar.SetActive(false);
+            mundoACambiar.SetActive(true);
+            camara.GetComponent<Animator>().SetBool("Blanco", false);
+
+        }
     }
 }

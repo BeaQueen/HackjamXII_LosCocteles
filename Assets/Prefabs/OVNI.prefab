@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5445594827542448673}
   - component: {fileID: 2274251651565246723}
   - component: {fileID: 267206102134231709}
+  - component: {fileID: 4555018817187470126}
   m_Layer: 0
   m_Name: LASER
   m_TagString: Untagged
@@ -106,7 +107,7 @@ CapsuleCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -114,6 +115,20 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+--- !u!114 &4555018817187470126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7166486949719836871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f5dc8241a3a3f54e92b3b93b39f7f50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ColisionLimites
+  tipoDeCoche: 1
+  direccionOrientacion: {fileID: 0}
 --- !u!1001 &21384288774108946
 PrefabInstance:
   m_ObjectHideFlags: 0

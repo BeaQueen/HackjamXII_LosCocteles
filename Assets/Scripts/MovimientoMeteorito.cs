@@ -1,6 +1,7 @@
 using UnityEngine;
+using static Interfaces;
 
-public class MovimientoMeteorito : LogicaConductor
+public class MovimientoMeteorito : TipoDeCoche
 {
     [SerializeField] Transform zonaAterrizaje;
     [SerializeField] GameObject[] zonasDeFuego;
@@ -8,7 +9,7 @@ public class MovimientoMeteorito : LogicaConductor
     [SerializeField] GameObject sistemaParticulasExplosion;
     [SerializeField] GameObject craterImpacto;
     [SerializeField] LayerMask mascaraConductor;
-    [SerializeField] TipoDeCoche cocheAlQueNoAfecto;
+    
     LogicaConductor scriptJugador;
 
     // Start is called before the first frame update
@@ -31,12 +32,13 @@ public class MovimientoMeteorito : LogicaConductor
             if (colls[0].GetComponent<LogicaConductor>()!=null)//si es conductor
             {
                 LogicaConductor scriptConductor = colls[0].GetComponent<LogicaConductor>();
-                if (cocheAlQueNoAfecto==scriptConductor.tipoDeCoche)//si encajo quiere decir que no le afecto
+                if (tipoDeCoche==scriptConductor.tipoDeCoche)//si encajo quiere decir que no le afecto
                 {
 
                 }
                 else//si no encajo si le afecto
                 {
+                    Debug.Log("impacto");
                     scriptJugador.ReducirRevoluciones();
                     scriptJugador.orientarPorGolpe = true;
                   
@@ -46,7 +48,8 @@ public class MovimientoMeteorito : LogicaConductor
                     scriptJugador.acelerando = false;
                     scriptJugador.acelerador = 1;
                     scriptJugador.multiplicador = 0;
-                    colls[0].GetComponent<ParpadeoGolpe>().IniciarParpadeo();
+                    scriptJugador.queCocheSoy.GetComponent<ParpadeoGolpe>().IniciarParpadeo();
+                    
 
                     Invoke("PermitirGirarJugador", 0.3F);
                 }

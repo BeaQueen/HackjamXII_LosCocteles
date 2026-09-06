@@ -331,11 +331,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d8318b3ef3329e4d8407b66ecfbecdf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MovimientoMeteorito
+  tipoDeCoche: 0
   zonaAterrizaje: {fileID: 6421559734665431546}
   zonasDeFuego:
   - {fileID: 2433282508537954060, guid: 659708fc41feeb64d94891102e9676a9, type: 3}
   sistemaParticulasExplosion: {fileID: 2433282508537954060, guid: 659708fc41feeb64d94891102e9676a9, type: 3}
   craterImpacto: {fileID: 0}
+  mascaraConductor:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!4 &6602428638180513912 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 456060457475420352, guid: 3d506fb5d1b24364a8ca68d1eb2a154f, type: 3}

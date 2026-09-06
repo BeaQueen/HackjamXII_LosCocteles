@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using static Interfaces;
 
-public class LogicaConductor : MonoBehaviour
+public class LogicaConductor : TipoDeCoche
 {
     [Header("Seleccion de coche")]
     public float acelerador;
@@ -57,21 +57,16 @@ public class LogicaConductor : MonoBehaviour
     public bool orientarPorGolpe;
     public Vector3 direccionOrientacionPorGolpe;
     [SerializeField] List<GameObject> listaDeCoches;
-    [SerializeField] GameObject queCocheSoy;
+   public GameObject queCocheSoy;
     [SerializeField] int indiceCoche;
-   public TipoDeCoche tipoDeCoche;
+   
    
 
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
-    public enum TipoDeCoche
-    {
-        Pasado,
-        Presente,
-        Futuro
-    }
+   
     void Start()
     {
         controlador = GetComponent<CharacterController>();
@@ -86,89 +81,93 @@ public class LogicaConductor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log(freno);
-        //Debug.Log(acelerador);
-        //Debug.Log(giro.x);
-        if (giro.x>-0.01&&giro.x<0.01)
+        if (gameObject.CompareTag("Player"))
         {
-            Orientarse(transform.forward, 0, ruedasAGirar.transform);
-            Orientarse(transform.forward, 0, ruedasAGirarDerrape.transform);
-            animCoche.SetBool("DerrapeDerecha", false);
-            animCoche.SetBool("DerrapeIzquierda", false);
-          //  animCoche.SetTrigger("llegaA0");
-            puedoGirar = false;
-            puedoGirarDerrape = false;
-        }
-        else
-        {
-            puedoGirar= true;
-
-        }
-
-         if (giro.x < -0.3 || giro.x > 0.3)//si paso del limite de giro
-        {
-           puedoGirarDerrape = true;
-            if (scriptPolvoCoche != null)
+            //Debug.Log(freno);
+            //Debug.Log(acelerador);
+            //Debug.Log(giro.x);
+            if (giro.x>-0.01&&giro.x<0.01)
             {
-                scriptPolvoCoche.ActivarParticulasPolvo();
-
+                Orientarse(transform.forward, 0, ruedasAGirar.transform);
+                Orientarse(transform.forward, 0, ruedasAGirarDerrape.transform);
+                animCoche.SetBool("DerrapeDerecha", false);
+                animCoche.SetBool("DerrapeIzquierda", false);
+              //  animCoche.SetTrigger("llegaA0");
+                puedoGirar = false;
+                puedoGirarDerrape = false;
             }
-        }
-        else if (giro.x > -0.3 || giro.x < 0.3)
-        {
-            puedoGirarDerrape = false;
-            if (scriptPolvoCoche != null)
+            else
             {
-                scriptPolvoCoche.DesactivarParticulasPolvo();
+                puedoGirar= true;
 
             }
 
-        }
+             if (giro.x < -0.3 || giro.x > 0.3)//si paso del limite de giro
+            {
+               puedoGirarDerrape = true;
+                if (scriptPolvoCoche != null)
+                {
+                    scriptPolvoCoche.ActivarParticulasPolvo();
+
+                }
+            }
+            else if (giro.x > -0.3 || giro.x < 0.3)
+            {
+                puedoGirarDerrape = false;
+                if (scriptPolvoCoche != null)
+                {
+                    scriptPolvoCoche.DesactivarParticulasPolvo();
+
+                }
+
+            }
        
 
-        rotacionY = ruedasAGirar.transform.rotation.eulerAngles.y;
+            rotacionY = ruedasAGirar.transform.rotation.eulerAngles.y;
 
-       LogicaAcelerador();
-        LogicaFreno();
+           LogicaAcelerador();
+            LogicaFreno();
 
 
-        if (acelerando == true)
-        {
-           revoluciones = revoluciones + 5*multiplicador * Time.deltaTime ;
-           
-
-        }
-        else
-        {
-           
-            if (frenando==false)
+            if (acelerando == true)
             {
-              revoluciones =revoluciones -2 * Time.deltaTime;
+               revoluciones = revoluciones + 5*multiplicador * Time.deltaTime ;
+           
 
             }
             else
             {
-                revoluciones = revoluciones - 5 *multiplicadorFreno* Time.deltaTime;
+           
+                if (frenando==false)
+                {
+                  revoluciones =revoluciones -2 * Time.deltaTime;
+
+                }
+                else
+                {
+                    revoluciones = revoluciones - 5 *multiplicadorFreno* Time.deltaTime;
+                }
             }
-        }
 
 
        
-         revoluciones = Mathf.Clamp(revoluciones,0,multiplicadorVelocidadMaxima);
-        multiplicadorFreno = Mathf.Clamp(multiplicadorFreno, 0, 10);
+             revoluciones = Mathf.Clamp(revoluciones,0,multiplicadorVelocidadMaxima);
+            multiplicadorFreno = Mathf.Clamp(multiplicadorFreno, 0, 10);
 
-        CamarasVelocidad();
+            CamarasVelocidad();
       
 
 
-        Movimiento();
-         Girar();
-        // FillAmount();
-        if (orientarPorGolpe)
-        {
-            OrientarsePorGolpe(direccionOrientacionPorGolpe, 0.1f, transform);
+            Movimiento();
+             Girar();
+            // FillAmount();
+            if (orientarPorGolpe)
+            {
+                OrientarsePorGolpe(direccionOrientacionPorGolpe, 0.1f, transform);
+            }
+      
+
         }
-      
     }
    
    
@@ -210,15 +209,15 @@ public class LogicaConductor : MonoBehaviour
                 queCocheSoy = listaDeCoches[i];
                 if (i==0)
                 {
-                    tipoDeCoche=TipoDeCoche.Presente;
+                    tipoDeCoche=Coche.Presente;
                 }
                 else if (i==1)
                 {
-                    tipoDeCoche=TipoDeCoche.Futuro;
+                    tipoDeCoche=Coche.Futuro;
                 }
                 else if(i==2)
                 {
-                    tipoDeCoche=TipoDeCoche.Pasado;
+                    tipoDeCoche=Coche.Pasado;
                 }
             }
         }
@@ -454,23 +453,27 @@ public class LogicaConductor : MonoBehaviour
     }
     void Movimiento()
     {
-        if(impulso==false)
+        if (gameObject.CompareTag("Player"))
         {
-            //  transform.Translate(new Vector3(0,0,multiplicadorVelocidad*revoluciones)*Time.deltaTime);
-            direccionLocal = camara.transform.forward * -giro.y + camara.transform.right * giro.x;//cogemos el frente de la camara en torno al movimiento del joystick izquierdo
-            direccionLocal.y = 0;//cancelamos subidas y bajadas con la camara
-            controlador.Move((new Vector3(direccionLocal.x, 0, direccionLocal.z).normalized * multiplicadorVelocidad * revoluciones)*Time.deltaTime ) ;
-           // controlador.
+            if(impulso==false)
+            {
+                //  transform.Translate(new Vector3(0,0,multiplicadorVelocidad*revoluciones)*Time.deltaTime);
+                direccionLocal = camara.transform.forward * -giro.y + camara.transform.right * giro.x;//cogemos el frente de la camara en torno al movimiento del joystick izquierdo
+                direccionLocal.y = 0;//cancelamos subidas y bajadas con la camara
+                controlador.Move((new Vector3(direccionLocal.x, 0, direccionLocal.z).normalized * multiplicadorVelocidad * revoluciones)*Time.deltaTime ) ;
+               // controlador.
+
+
+            }
+            else
+            {
+                //revoluciones = 0;
+                //transform.Translate(direccionImpulso * fuerzaImpulso * Time.deltaTime);
+                //Invoke("DesactivarImpulso", 2f);
+            }
 
 
         }
-        else
-        {
-            //revoluciones = 0;
-            //transform.Translate(direccionImpulso * fuerzaImpulso * Time.deltaTime);
-            //Invoke("DesactivarImpulso", 2f);
-        }
-
 
     }
     void DesactivarImpulso()
