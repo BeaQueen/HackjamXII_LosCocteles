@@ -7,6 +7,7 @@ public class MovimientoMeteorito : MonoBehaviour
     GameObject zonaDeFuegoEscogida;
     [SerializeField] GameObject sistemaParticulasExplosion;
     [SerializeField] GameObject craterImpacto;
+    [SerializeField] LayerMask mascaraConductor;
 
     // Start is called before the first frame update
     void Start()
@@ -19,6 +20,17 @@ public class MovimientoMeteorito : MonoBehaviour
 
 
 
+    }
+    private void OnDestroy()
+    {
+        Collider[] colls = Physics.OverlapSphere(transform.position, 4, mascaraConductor);
+        if (colls.Length>0)
+        {
+            //if (colls[0].GetComponent<>)
+            //{
+
+            //}
+        }
     }
 
     // Update is called once per frame

@@ -13,7 +13,11 @@ public class ColisionLimites : MonoBehaviour , IColision
         scriptJugador.ReducirRevoluciones();
         scriptJugador.orientarPorGolpe = true;
         //scriptJugador.Orientarse(direccionColision, 0.1f, jugador.transform);//orientamos segun una referencia que tiene esta colision
-        scriptJugador.direccionOrientacionPorGolpe = direccionColision+direccionOrientacion.forward;                                                                                     // scriptJugador.Impulso(direccionOrientacion.transform.forward, 20);
+        if (direccionColision != null)
+        {
+           scriptJugador.direccionOrientacionPorGolpe = direccionColision+direccionOrientacion.forward;                                                                                     // scriptJugador.Impulso(direccionOrientacion.transform.forward, 20);
+
+        }
         scriptJugador.puedoGirar = false;
         scriptJugador.puedoPisarAcelerador = false;
         scriptJugador.acelerando = false;
