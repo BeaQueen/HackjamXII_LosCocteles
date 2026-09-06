@@ -61,7 +61,10 @@ public class LogicaConductor : TipoDeCoche
     [SerializeField] int indiceCoche;
    
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
    
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 
@@ -74,12 +77,15 @@ public class LogicaConductor : TipoDeCoche
     {
         controlador = GetComponent<CharacterController>();
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
         if (listaDeCoches != null && listaDeCoches.Count > 0)
         {
             indiceCoche = Mathf.Clamp(indiceCoche, 0, listaDeCoches.Count - 1);
             ActivarCoche(indiceCoche);
         }
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
     }
@@ -300,6 +306,9 @@ public class LogicaConductor : TipoDeCoche
         {
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
             Debug.Log("gatillo izquierdo");
@@ -317,6 +326,9 @@ public class LogicaConductor : TipoDeCoche
     }
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
    
