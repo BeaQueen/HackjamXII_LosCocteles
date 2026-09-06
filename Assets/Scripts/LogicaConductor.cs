@@ -60,7 +60,10 @@ public class LogicaConductor : TipoDeCoche
    public GameObject queCocheSoy;
     [SerializeField] int indiceCoche;
    
+<<<<<<< Updated upstream
    
+=======
+>>>>>>> Stashed changes
 
 
 
@@ -70,18 +73,28 @@ public class LogicaConductor : TipoDeCoche
     void Start()
     {
         controlador = GetComponent<CharacterController>();
+<<<<<<< Updated upstream
 
         if (listaDeCoches != null && listaDeCoches.Count > 0)
         {
             indiceCoche = Mathf.Clamp(indiceCoche, 0, listaDeCoches.Count - 1);
             ActivarCoche(indiceCoche);
         }
+=======
+>>>>>>> Stashed changes
     }
   
     // Update is called once per frame
     void Update()
     {
+<<<<<<< Updated upstream
         if (gameObject.CompareTag("Player"))
+=======
+        //Debug.Log(freno);
+        //Debug.Log(acelerador);
+        //Debug.Log(giro.x);
+        if (giro.x>-0.01&&giro.x<0.01)
+>>>>>>> Stashed changes
         {
             //Debug.Log(freno);
             //Debug.Log(acelerador);
@@ -168,6 +181,7 @@ public class LogicaConductor : TipoDeCoche
       
 
         }
+      
     }
    
    
@@ -285,6 +299,9 @@ public class LogicaConductor : TipoDeCoche
         if (context.performed)
         {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
             Debug.Log("gatillo izquierdo");
             indiceCoche =indiceCoche-1;
             //if (indiceCoche < 0)
@@ -299,6 +316,9 @@ public class LogicaConductor : TipoDeCoche
         }
     }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
    
     public void GatilloDerecho(InputAction.CallbackContext context)
     {
