@@ -21,6 +21,14 @@ public class ParpadeoGolpe : MonoBehaviour
     {
         StartCoroutine(Parpadeo());
     }
+    public void ActivarMesh()
+    {
+        for (int i = 0; i < renderer.Count; i++)
+        {
+            renderer[i].enabled = true;//desactivamos el renderer por un tiempo
+        }
+    }
+   
     IEnumerator Parpadeo()
     {
         for (int i = 0; i < renderer.Count; i++)
@@ -54,5 +62,9 @@ public class ParpadeoGolpe : MonoBehaviour
             renderer[i].enabled = true;//desactivamos el renderer por un tiempo
         }
 
+    }
+    private void OnDisable()
+    {
+            ActivarMesh();
     }
 }
