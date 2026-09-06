@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static Interfaces;
@@ -5,12 +6,15 @@ using static Interfaces;
 public class Portal : MonoBehaviour, IColision
 {
     [SerializeField] GameObject camara;
+    [SerializeField] GameObject mundoADesactivar;
+    [SerializeField] GameObject mundoACambiar;
    
 
     public void Colision(GameObject jugador, Vector3 direccionColision)
     {
-        camara.GetComponent<Animator>().SetTrigger("Blanco");
-        SceneManager.LoadScene("Leaderboard");
+        StartCoroutine(CambioDeMundo());
+      //  camara.GetComponent<Animator>().SetBool("Blanco",true);
+       // SceneManager.LoadScene("Leaderboard");
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -23,5 +27,13 @@ public class Portal : MonoBehaviour, IColision
     void Update()
     {
         
+    }
+    IEnumerator CambioDeMundo()
+    {
+        camara.GetComponent<Animator>().SetBool("Blanco", true);
+        yield return new WaitForSeconds(2);
+        mundoADesactivar.SetActive(false);
+        mundoACambiar.SetActive(true);
+        camara.GetComponent<Animator>().SetBool("Blanco", false);
     }
 }
