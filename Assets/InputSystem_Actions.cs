@@ -235,7 +235,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""1062837e-0b7d-47cb-9184-bf581fe46204"",
-                    ""path"": ""<HID::Logitech G923 Racing Wheel for PlayStation and PC>/button6"",
+                    ""path"": ""<HID::Logitech G923 Racing Wheel for PlayStation and PC>/button2"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -246,7 +246,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""c18fdeda-8bea-47be-abf0-2be3ca4a6ca0"",
-                    ""path"": ""<HID::Logitech G923 Racing Wheel for PlayStation and PC>/button5"",
+                    ""path"": ""<HID::Logitech G923 Racing Wheel for PlayStation and PC>/button3"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",

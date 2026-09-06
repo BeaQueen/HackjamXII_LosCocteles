@@ -9,7 +9,7 @@ public class RandomizacionMeteorito : MonoBehaviour
     [SerializeField] float delayEntreMeteoritos;
     Coroutine llamadaCorrutina;
     [SerializeField] bool activar;
-    [SerializeField] int cantidadDeRuedas;
+    [SerializeField] int cantidadDeMeteoritos;
    
 
     // Start is called before the first frame update
@@ -28,13 +28,13 @@ public class RandomizacionMeteorito : MonoBehaviour
 
         while (true)
         {
-            if (cantidadDeRuedas == 0)
+            if (cantidadDeMeteoritos == 0)
             {
                 yield return new WaitForEndOfFrame();
             }
             else
             {
-                for (int i = 0; i < cantidadDeRuedas; i++)
+                for (int i = 0; i < cantidadDeMeteoritos; i++)
                 {
                     Vector3 posRandom = new Vector3(Random.Range(xMin.transform.position.x, xMax.transform.position.x), transform.position.y, Random.Range(zMin.transform.position.z, zMax.transform.position.z));
                     Instantiate(prefabMeteorito, posRandom, Quaternion.identity);//instanciamos en una posicion aleatoria al meteoro

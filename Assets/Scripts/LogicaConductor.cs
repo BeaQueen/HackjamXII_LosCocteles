@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -15,7 +17,7 @@ public class LogicaConductor : MonoBehaviour
     [SerializeField] Transform orientacionCamaraAyuda;
     [SerializeField] float velocidadDeMovimiento;
     [SerializeField] float multiplicadorGiro;
-  [SerializeField]  float revoluciones;
+ public  float revoluciones;
     [SerializeField] float multiplicadorVelocidad;
     float multiplicadorVelocidadMaxima=10;
     [SerializeField] float offsetDerrape;
@@ -53,6 +55,9 @@ public class LogicaConductor : MonoBehaviour
    public bool puedoPisarAcelerador;
     public bool orientarPorGolpe;
     public Vector3 direccionOrientacionPorGolpe;
+    [SerializeField] List<GameObject> listaDeCoches;
+    [SerializeField] GameObject queCocheSoy;
+    [SerializeField] int indiceCoche;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -147,6 +152,24 @@ public class LogicaConductor : MonoBehaviour
             OrientarsePorGolpe(direccionOrientacionPorGolpe, 0.1f, transform);
         }
     }
+    public void ActivarCoche(int indice)
+    {
+        //for (int i = 0; i < listaDeCoches.Count; i++)
+        //{
+        //    if (i==indice)
+        //    {
+        //        if (!listaDeCoches[i])
+        //        listaDeCoches[i].SetActive(true);
+        //        queCocheSoy = listaDeCoches[i];
+                
+        //    }
+        //    else
+        //    {
+        //        listaDeCoches[i].SetActive(false);
+
+        //    }
+        //}
+    }
     public void Acelador(InputAction.CallbackContext context)
     {
         if (puedoPisarAcelerador)
@@ -163,6 +186,31 @@ public class LogicaConductor : MonoBehaviour
     public void Volante(InputAction.CallbackContext context)
     {
         giro = context.ReadValue<Vector2>();
+    }
+    public void GatilloIzquierdo(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            indiceCoche --;
+            //if (indiceCoche < 0)
+            //{
+            //    indiceCoche = listaDeCoches.Count;
+            //}
+
+        }
+    }
+    public void GatilloDerecho(InputAction.CallbackContext context)
+    {
+        Debug.Log("presiono");
+        if (context.performed)
+        {
+            indiceCoche ++;
+            //if (indiceCoche>listaDeCoches.Count)
+            //{
+            //    indiceCoche = 0;
+            //}
+
+        }
     }
     void LogicaAcelerador()
     {
