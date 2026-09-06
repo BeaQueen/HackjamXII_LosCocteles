@@ -5,387 +5,636 @@ using UnityEngine.InputSystem;
 
 public class WheelMenuNavigation : MonoBehaviour
 {
-    // Botones del menú colocados en orden:
-    // Play -> Exit -> Settings -> Credits.
+    // =========================================================
+    // MENU
+    // =========================================================
+
+    [Header("Menu")]
+
     [SerializeField]
     private Button[] menuButtons;
 
-    // Botón Back de esta pantalla.
-    // En el Main Menu puede quedarse vacío.
     [SerializeField]
     private Button backButton;
 
-    // RectTransform que contiene toda la rueda.
-    // Este objeto será el que rote visualmente.
     [SerializeField]
     private RectTransform menuWheel;
 
-    // Velocidad visual a la que gira la rueda.
+
+    // =========================================================
+    // INPUT ACTIONS
+    // =========================================================
+
+    [Header("Wheel Inputs")]
+
+    [Tooltip("Palanca izquierda")]
+    [SerializeField]
+    private InputActionReference leftPaddleAction;
+
+    [Tooltip("Palanca derecha")]
+    [SerializeField]
+    private InputActionReference rightPaddleAction;
+
+    [Tooltip("Pedal del acelerador")]
+    [SerializeField]
+    private InputActionReference acceleratorAction;
+
+    [Tooltip("Pedal del freno")]
+    [SerializeField]
+    private InputActionReference brakeAction;
+
+
+    // =========================================================
+    // ROTATION
+    // =========================================================
+
+    [Header("Wheel Rotation")]
+
     [SerializeField]
     private float rotationSpeed = 500f;
 
-    // Grados que separan cada botón.
-    // Con cuatro botones: 360 / 4 = 90 grados.
+    [Tooltip("Con cuatro botones normalmente será 90")]
     [SerializeField]
     private float anglePerButton = 90f;
 
-    // Cantidad mínima de giro necesaria
-    // para considerar que el volante está girando.
+
+    // =========================================================
+    // PEDALS
+    // =========================================================
+
+    [Header("Pedal Settings")]
+
+    [Tooltip(
+        "Valor por debajo del cual consideramos el pedal pisado. " +
+        "En vuestro volante el pedal suelto suele dar 1."
+    )]
     [SerializeField]
-    private float steeringThreshold = 0.015f;
+    private float pedalPressedThreshold = 0.8f;
 
-    // Valor a partir del cual consideramos
-    // que un pedal está siendo pulsado.
-    //
-    // Por los valores del volante de vuestro programador,
-    // parece que los pedales pasan a valores negativos
-    // cuando se pisan.
+    [Tooltip(
+        "Valor a partir del cual consideramos el pedal completamente suelto."
+    )]
     [SerializeField]
-    private float pedalPressedThreshold = -0.1f;
+    private float pedalReleasedThreshold = 0.95f;
 
-    // Tiempo que esperamos antes de empezar
-    // a repetir el movimiento al mantener el volante girado.
-    [SerializeField]
-    private float initialRepeatDelay = 0.4f;
 
-    // Tiempo entre cambios mientras
-    // mantenemos el volante girado.
-    [SerializeField]
-    private float repeatInterval = 0.2f;
+    // =========================================================
+    // INTERNAL
+    // =========================================================
 
-    // Valor recibido de la Input Action del volante.
-    private Vector2 giro;
-
-    // Estado del pedal del acelerador.
-    private float acelerador;
-
-    // Estado del pedal de freno.
-    private float freno;
-
-    // Nos permite detectar solamente
-    // el momento en el que se pisa el acelerador.
-    private bool aceleradorPulsado = false;
-
-    // Nos permite detectar solamente
-    // el momento en el que se pisa el freno.
-    private bool frenoPulsado = false;
-
-    // Índice del botón seleccionado actualmente.
     private int currentButtonIndex = 0;
 
-    // Rotación hacia la que queremos mover la rueda.
     private Quaternion targetRotation;
 
-    // Dirección mantenida actualmente:
-    //
-    // -1 = derecha
-    //  1 = izquierda
-    //  0 = ninguna
-    private int heldDirection = 0;
+    private bool acceleratorReady = false;
+    private bool brakeReady = false;
 
-    // Momento en el que podremos realizar
-    // el siguiente movimiento repetido.
-    private float nextRepeatTime = 0f;
+    private bool acceleratorWasPressed = false;
+    private bool brakeWasPressed = false;
 
+
+    // =========================================================
+    // UNITY
+    // =========================================================
 
     private void Start()
     {
-        // Si tenemos botones configurados,
-        // seleccionamos el primero.
-        if (menuButtons.Length > 0)
+        if (menuButtons == null || menuButtons.Length == 0)
         {
-            SelectButton(currentButtonIndex);
+            Debug.LogError(
+                "WheelMenuNavigation: No hay botones asignados."
+            );
+
+            return;
         }
 
-        // Establecemos la rotación inicial.
+
+        if (menuWheel == null)
+        {
+            Debug.LogError(
+                "WheelMenuNavigation: No hay Menu Wheel asignada."
+            );
+
+            return;
+        }
+
+
+        currentButtonIndex = 0;
+
+        SelectButton(
+            currentButtonIndex
+        );
+
         UpdateTargetRotation();
+    }
+
+
+    private void OnEnable()
+    {
+        // =====================================================
+        // PALANCA IZQUIERDA
+        // =====================================================
+
+        if (leftPaddleAction != null)
+        {
+            leftPaddleAction.action.performed +=
+                OnLeftPaddlePressed;
+
+            leftPaddleAction.action.Enable();
+        }
+
+
+        // =====================================================
+        // PALANCA DERECHA
+        // =====================================================
+
+        if (rightPaddleAction != null)
+        {
+            rightPaddleAction.action.performed +=
+                OnRightPaddlePressed;
+
+            rightPaddleAction.action.Enable();
+        }
+
+
+        // =====================================================
+        // ACELERADOR
+        // =====================================================
+
+        if (acceleratorAction != null)
+        {
+            acceleratorAction.action.Enable();
+        }
+
+
+        // =====================================================
+        // FRENO
+        // =====================================================
+
+        if (brakeAction != null)
+        {
+            brakeAction.action.Enable();
+        }
+    }
+
+
+    private void OnDisable()
+    {
+        if (leftPaddleAction != null)
+        {
+            leftPaddleAction.action.performed -=
+                OnLeftPaddlePressed;
+
+            leftPaddleAction.action.Disable();
+        }
+
+
+        if (rightPaddleAction != null)
+        {
+            rightPaddleAction.action.performed -=
+                OnRightPaddlePressed;
+
+            rightPaddleAction.action.Disable();
+        }
+
+
+        if (acceleratorAction != null)
+        {
+            acceleratorAction.action.Disable();
+        }
+
+
+        if (brakeAction != null)
+        {
+            brakeAction.action.Disable();
+        }
     }
 
 
     private void Update()
     {
-        // Dirección recibida este frame.
-        int inputDirection = 0;
-
-
-        // ==================================================
-        // DEBUG CON TECLADO
-        // ==================================================
+        // =====================================================
+        // TECLADO PARA PROBAR EN CASA
+        // =====================================================
 
         if (Keyboard.current != null)
         {
-            // Flecha derecha.
-            if (Keyboard.current.rightArrowKey.isPressed)
+            // Exactamente lo mismo que palanca izquierda
+            if (
+                Keyboard.current
+                    .leftArrowKey
+                    .wasPressedThisFrame
+            )
             {
-                inputDirection = -1;
+                MoveLeft();
             }
 
-            // Flecha izquierda.
-            else if (Keyboard.current.leftArrowKey.isPressed)
+
+            // Exactamente lo mismo que palanca derecha
+            if (
+                Keyboard.current
+                    .rightArrowKey
+                    .wasPressedThisFrame
+            )
             {
-                inputDirection = 1;
+                MoveRight();
             }
 
 
-            // ENTER activa el botón seleccionado.
-            if (Keyboard.current.enterKey.wasPressedThisFrame)
+            // Enter = acelerador
+            if (
+                Keyboard.current
+                    .enterKey
+                    .wasPressedThisFrame
+            )
             {
                 SelectCurrentButton();
             }
 
 
-            // ESCAPE o BACKSPACE actúan como el pedal de freno
-            // y pulsan el botón Back.
-            if (Keyboard.current.escapeKey.wasPressedThisFrame ||
-                Keyboard.current.backspaceKey.wasPressedThisFrame)
+            // Escape / Backspace = freno
+            if (
+                Keyboard.current
+                    .escapeKey
+                    .wasPressedThisFrame
+                ||
+                Keyboard.current
+                    .backspaceKey
+                    .wasPressedThisFrame
+            )
             {
                 GoBack();
             }
         }
 
 
-        // ==================================================
-        // VOLANTE
-        // ==================================================
+        // =====================================================
+        // PEDALES
+        // =====================================================
 
-        // Solo utilizamos el volante si no estamos
-        // usando las flechas del teclado.
-        if (inputDirection == 0)
+        ReadAccelerator();
+
+        ReadBrake();
+
+
+        // =====================================================
+        // ROTACIÓN VISUAL
+        // =====================================================
+
+        if (menuWheel != null)
         {
-            // Giro a la derecha.
-            if (giro.x > steeringThreshold)
-            {
-                inputDirection = -1;
-            }
-
-            // Giro a la izquierda.
-            else if (giro.x < -steeringThreshold)
-            {
-                inputDirection = 1;
-            }
+            menuWheel.localRotation =
+                Quaternion.RotateTowards(
+                    menuWheel.localRotation,
+                    targetRotation,
+                    rotationSpeed *
+                    Time.unscaledDeltaTime
+                );
         }
-
-
-        // ==================================================
-        // NAVEGACIÓN POR LA RUEDA
-        // ==================================================
-
-        // Si hemos dejado de girar...
-        if (inputDirection == 0)
-        {
-            // Reiniciamos la dirección mantenida.
-            heldDirection = 0;
-        }
-
-        // Si acabamos de empezar a girar
-        // o hemos cambiado de dirección...
-        else if (inputDirection != heldDirection)
-        {
-            // Guardamos la nueva dirección.
-            heldDirection = inputDirection;
-
-            // Movemos inmediatamente una opción.
-            MoveSelection(heldDirection);
-
-            // Esperamos antes de empezar
-            // la repetición automática.
-            nextRepeatTime =
-                Time.unscaledTime + initialRepeatDelay;
-        }
-
-        // Si seguimos manteniendo la misma dirección...
-        else if (Time.unscaledTime >= nextRepeatTime)
-        {
-            // Seguimos rotando por las opciones.
-            MoveSelection(heldDirection);
-
-            // Programamos el siguiente movimiento.
-            nextRepeatTime =
-                Time.unscaledTime + repeatInterval;
-        }
-
-
-        // ==================================================
-        // ROTACIÓN VISUAL DE LA RUEDA
-        // ==================================================
-
-        // Giramos suavemente hacia
-        // la posición correspondiente.
-        menuWheel.localRotation =
-            Quaternion.RotateTowards(
-                menuWheel.localRotation,
-                targetRotation,
-                rotationSpeed * Time.unscaledDeltaTime
-            );
     }
 
 
-    // ==================================================
-    // INPUT ACTION - VOLANTE
-    // ==================================================
+    // =========================================================
+    // LEFT PADDLE
+    // =========================================================
 
-    // Esta función debe estar conectada
-    // a la misma Input Action "Volante"
-    // que utiliza vuestro LogicaConductor.
-    public void Volante(InputAction.CallbackContext context)
+    private void OnLeftPaddlePressed(
+        InputAction.CallbackContext context)
     {
-        giro = context.ReadValue<Vector2>();
+        Debug.Log(
+            "MENU: PALANCA IZQUIERDA"
+        );
+
+        // EXACTAMENTE lo mismo que ←
+        MoveLeft();
     }
 
 
-    // ==================================================
-    // INPUT ACTION - ACELERADOR
-    // ==================================================
+    // =========================================================
+    // RIGHT PADDLE
+    // =========================================================
 
-    // Esta función debe estar conectada
-    // a la Input Action del acelerador.
-    public void Acelador(InputAction.CallbackContext context)
+    private void OnRightPaddlePressed(
+        InputAction.CallbackContext context)
     {
-        // Leemos el valor recibido del pedal.
-        acelerador = context.ReadValue<float>();
+        Debug.Log(
+            "MENU: PALANCA DERECHA"
+        );
 
-        // Comprobamos si el pedal está siendo pisado.
-        bool pedalAhoraPulsado =
-            acelerador < pedalPressedThreshold;
+        // EXACTAMENTE lo mismo que →
+        MoveRight();
+    }
 
 
-        // Solo ejecutamos la selección
-        // justo en el momento de pisar el pedal.
+    // =========================================================
+    // ACCELERATOR
+    // =========================================================
+
+    private void ReadAccelerator()
+    {
+        if (acceleratorAction == null)
+            return;
+
+
+        float rawValue =
+            acceleratorAction.action
+                .ReadValue<float>();
+
+
+        /*
+         * Primero esperamos a detectar
+         * el pedal suelto.
+         *
+         * Esto evita que al entrar al menú
+         * Unity interprete un valor inicial
+         * incorrecto como una pulsación.
+         */
+
+        if (!acceleratorReady)
+        {
+            if (
+                rawValue >=
+                pedalReleasedThreshold
+            )
+            {
+                acceleratorReady = true;
+
+                acceleratorWasPressed = false;
+
+                Debug.Log(
+                    "MENU: acelerador preparado"
+                );
+            }
+
+            return;
+        }
+
+
+        bool pressed =
+            rawValue <
+            pedalPressedThreshold;
+
+
+        // Solo actuamos al pasar de:
         //
-        // Así evitamos activar varias veces el botón
-        // mientras mantenemos el pedal pisado.
-        if (pedalAhoraPulsado && !aceleradorPulsado)
+        // SUELTO -> PISADO
+
+        if (
+            pressed &&
+            !acceleratorWasPressed
+        )
         {
+            Debug.Log(
+                "MENU: ACELERADOR / ACCEPT"
+            );
+
             SelectCurrentButton();
         }
 
 
-        // Guardamos el estado actual
-        // para compararlo en la siguiente lectura.
-        aceleradorPulsado = pedalAhoraPulsado;
+        acceleratorWasPressed =
+            pressed;
     }
 
 
-    // ==================================================
-    // INPUT ACTION - FRENO
-    // ==================================================
+    // =========================================================
+    // BRAKE
+    // =========================================================
 
-    // Esta función debe estar conectada
-    // a la Input Action del freno.
-    public void Freno(InputAction.CallbackContext context)
+    private void ReadBrake()
     {
-        // Leemos el valor recibido del pedal.
-        freno = context.ReadValue<float>();
-
-        // Comprobamos si el pedal está pisado.
-        bool pedalAhoraPulsado =
-            freno < pedalPressedThreshold;
+        if (brakeAction == null)
+            return;
 
 
-        // Solo ejecutamos Back
-        // en el momento de empezar a pisar.
-        if (pedalAhoraPulsado && !frenoPulsado)
+        float rawValue =
+            brakeAction.action
+                .ReadValue<float>();
+
+
+        // Primero detectamos el pedal suelto
+
+        if (!brakeReady)
         {
+            if (
+                rawValue >=
+                pedalReleasedThreshold
+            )
+            {
+                brakeReady = true;
+
+                brakeWasPressed = false;
+
+                Debug.Log(
+                    "MENU: freno preparado"
+                );
+            }
+
+            return;
+        }
+
+
+        bool pressed =
+            rawValue <
+            pedalPressedThreshold;
+
+
+        // Solo una acción por pulsación
+
+        if (
+            pressed &&
+            !brakeWasPressed
+        )
+        {
+            Debug.Log(
+                "MENU: FRENO / BACK"
+            );
+
             GoBack();
         }
 
 
-        // Guardamos el estado actual.
-        frenoPulsado = pedalAhoraPulsado;
+        brakeWasPressed =
+            pressed;
     }
 
 
-    // ==================================================
-    // SELECCIONAR
-    // ==================================================
+    // =========================================================
+    // LEFT
+    // =========================================================
 
-    private void SelectCurrentButton()
+    private void MoveLeft()
     {
-        // Comprobamos que haya botones
-        // y que el índice sea válido.
-        if (menuButtons.Length == 0)
-        {
+        if (
+            menuButtons == null ||
+            menuButtons.Length == 0
+        )
             return;
-        }
 
-        // Ejecutamos exactamente el mismo OnClick
-        // que tendría el botón si lo pulsáramos con el ratón.
-        menuButtons[currentButtonIndex].onClick.Invoke();
+
+        /*
+         * Mantiene el comportamiento
+         * que tenía tu flecha izquierda.
+         */
+
+        MoveSelection(1);
     }
 
 
-    // ==================================================
-    // BACK
-    // ==================================================
+    // =========================================================
+    // RIGHT
+    // =========================================================
 
-    private void GoBack()
+    private void MoveRight()
     {
-        // Si esta pantalla no tiene botón Back,
-        // simplemente no hacemos nada.
-        //
-        // Esto nos permite dejar Back vacío
-        // en el Main Menu.
-        if (backButton == null)
-        {
+        if (
+            menuButtons == null ||
+            menuButtons.Length == 0
+        )
             return;
-        }
 
-        // Ejecutamos el OnClick del botón Back.
-        backButton.onClick.Invoke();
+
+        /*
+         * Mantiene el comportamiento
+         * que tenía tu flecha derecha.
+         */
+
+        MoveSelection(-1);
     }
 
 
-    // ==================================================
-    // CAMBIO DE SELECCIÓN
-    // ==================================================
+    // =========================================================
+    // CHANGE SELECTION
+    // =========================================================
 
-    private void MoveSelection(int direction)
+    private void MoveSelection(
+        int direction)
     {
-        // Cambiamos el índice.
         currentButtonIndex += direction;
 
 
-        // Si pasamos del último botón,
-        // volvemos al primero.
-        if (currentButtonIndex >= menuButtons.Length)
+        // Circular hacia delante
+        if (
+            currentButtonIndex >=
+            menuButtons.Length
+        )
         {
             currentButtonIndex = 0;
         }
 
-        // Si retrocedemos desde el primero,
-        // saltamos al último.
-        else if (currentButtonIndex < 0)
+
+        // Circular hacia atrás
+        else if (
+            currentButtonIndex < 0
+        )
         {
-            currentButtonIndex = menuButtons.Length - 1;
+            currentButtonIndex =
+                menuButtons.Length - 1;
         }
 
 
-        // Seleccionamos el nuevo botón.
-        SelectButton(currentButtonIndex);
+        SelectButton(
+            currentButtonIndex
+        );
 
-        // Actualizamos la rotación.
+
         UpdateTargetRotation();
     }
 
 
+    // =========================================================
+    // SELECT BUTTON VISUALLY
+    // =========================================================
+
     private void SelectButton(int index)
     {
-        // Marcamos el botón como seleccionado
-        // dentro del EventSystem.
-        EventSystem.current.SetSelectedGameObject(
-            menuButtons[index].gameObject
-        );
+        if (
+            menuButtons == null ||
+            menuButtons.Length == 0
+        )
+            return;
+
+
+        if (menuButtons[index] == null)
+            return;
+
+
+        if (EventSystem.current != null)
+        {
+            EventSystem.current
+                .SetSelectedGameObject(
+                    menuButtons[index].gameObject
+                );
+        }
     }
 
 
+    // =========================================================
+    // ACCEPT
+    // =========================================================
+
+    private void SelectCurrentButton()
+    {
+        if (
+            menuButtons == null ||
+            menuButtons.Length == 0
+        )
+            return;
+
+
+        Button selectedButton =
+            menuButtons[
+                currentButtonIndex
+            ];
+
+
+        if (
+            selectedButton != null &&
+            selectedButton.interactable
+        )
+        {
+            selectedButton
+                .onClick
+                .Invoke();
+        }
+    }
+
+
+    // =========================================================
+    // BACK
+    // =========================================================
+
+    private void GoBack()
+    {
+        if (backButton == null)
+            return;
+
+
+        if (backButton.interactable)
+        {
+            backButton
+                .onClick
+                .Invoke();
+        }
+    }
+
+
+    // =========================================================
+    // ROTATION
+    // =========================================================
+
     private void UpdateTargetRotation()
     {
-        // Calculamos el ángulo necesario
-        // para colocar la opción seleccionada arriba.
         float targetAngle =
-            currentButtonIndex * anglePerButton;
+            currentButtonIndex *
+            anglePerButton;
+
 
         targetRotation =
-            Quaternion.Euler(0f, 0f, targetAngle);
+            Quaternion.Euler(
+                0f,
+                0f,
+                targetAngle
+            );
     }
 }
