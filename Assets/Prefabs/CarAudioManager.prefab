@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2500303465003967448
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7345826235525176209}
+  - component: {fileID: -8590825087013600229}
+  m_Layer: 0
+  m_Name: CarAudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7345826235525176209
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2500303465003967448}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1021.08014, y: -0, z: 3183.398}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-8590825087013600229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2500303465003967448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e65ac0ef18cdb444191e3c708052c297, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  cars:
+  - carName: Presente
+    carRoot: {fileID: 0}
+    startupClip: {fileID: 8300000, guid: 88ab21016cb4f1742b2e1db81a50a2c1, type: 3}
+    engineLoopClip: {fileID: 8300000, guid: fe3467285060dd1408285a687a726b36, type: 3}
+    accelerationClip: {fileID: 8300000, guid: 9e2b3e1fbc7d27d4da87c4ec29ab8be7, type: 3}
+  - carName: Pasado
+    carRoot: {fileID: 0}
+    startupClip: {fileID: 0}
+    engineLoopClip: {fileID: 8300000, guid: 37c4bf0daa6db1d4fb3610435d30d1ca, type: 3}
+    accelerationClip: {fileID: 8300000, guid: bd23d0a308d78ac4ea6abfbce2d6d05f, type: 3}
+  - carName: Futuro
+    carRoot: {fileID: 0}
+    startupClip: {fileID: 8300000, guid: b447e6af9381dca4eb9da060042afa44, type: 3}
+    engineLoopClip: {fileID: 8300000, guid: e6f38b44eb9fda64e8639d1d4b050775, type: 3}
+    accelerationClip: {fileID: 8300000, guid: 9e2b3e1fbc7d27d4da87c4ec29ab8be7, type: 3}
+  brakeClip: {fileID: 8300000, guid: bdc68a01df7abc14a99987fcb9e40be8, type: 3}
+  skidClip: {fileID: 8300000, guid: 8f555a7b61a3f184b943f97c7ac7c074, type: 3}
+  crashClip: {fileID: 8300000, guid: df597a1d7e0f35d4fbf8229d67f2c3c0, type: 3}
+  brakeAction: {fileID: 8001411006616221582, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  steeringAction: {fileID: -6157254988693446790, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  maxRevolutions: 10
+  idlePitch: 0.75
+  maxEnginePitch: 1.6
+  idleVolume: 0.35
+  maxEngineVolume: 0.85
+  engineSmoothness: 5
+  brakeThreshold: 0.2
+  skidSteeringThreshold: 0.3
+  minimumSkidRevolutions: 1
+  skidVolume: 0.8
+  crashSpeedDropThreshold: 7
+  crashCooldown: 0.5
