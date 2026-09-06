@@ -41,6 +41,7 @@ public class CarSpeedometerManager : MonoBehaviour
     // =========================================================
 
     [Header("RPM")]
+
     [SerializeField] private float maxRevolutions = 10f;
 
     [Tooltip("Suavidad del movimiento del velocímetro")]
@@ -52,8 +53,16 @@ public class CarSpeedometerManager : MonoBehaviour
     // =========================================================
 
     [Header("Needle Rotation")]
+
+    [Tooltip("Posición de la aguja con 0 RPM")]
     [SerializeField] private float minimumNeedleAngle = 217.9f;
-    [SerializeField] private float maximumNeedleAngle = 315.6f;
+
+    [Tooltip(
+        "Posición de la aguja con máximas RPM. " +
+        "-44.4º equivale visualmente a 315.6º, " +
+        "pero hace que recorra la esfera en el sentido correcto."
+    )]
+    [SerializeField] private float maximumNeedleAngle = -44.4f;
 
 
     // =========================================================
@@ -78,8 +87,7 @@ public class CarSpeedometerManager : MonoBehaviour
 
     private void Update()
     {
-        // Por si cambia el coche activo,
-        // comprobamos si sigue siendo el mismo.
+        // Comprueba si el coche activo ha cambiado
         CheckActiveCar();
 
         if (activeProfile == null || conductor == null)
@@ -95,7 +103,7 @@ public class CarSpeedometerManager : MonoBehaviour
 
     private void FindActiveCar()
     {
-        // Primero apagamos todos los velocímetros
+        // Apagamos todos los velocímetros
         foreach (CarSpeedometerProfile profile in cars)
         {
             if (profile.speedometerRoot != null)
@@ -103,6 +111,7 @@ public class CarSpeedometerManager : MonoBehaviour
                 profile.speedometerRoot.SetActive(false);
             }
         }
+
 
         // Buscamos el coche que esté activo
         foreach (CarSpeedometerProfile profile in cars)
@@ -116,6 +125,7 @@ public class CarSpeedometerManager : MonoBehaviour
                 return;
             }
         }
+
 
         Debug.LogWarning(
             "CarSpeedometerManager: No se ha encontrado ningún coche activo."
@@ -135,6 +145,7 @@ public class CarSpeedometerManager : MonoBehaviour
             return;
         }
 
+
         // Si ha cambiado, buscamos de nuevo
         FindActiveCar();
     }
@@ -143,7 +154,7 @@ public class CarSpeedometerManager : MonoBehaviour
     private void SetActiveProfile(
         CarSpeedometerProfile newProfile)
     {
-        // Apagamos todos
+        // Apagamos todos los velocímetros
         foreach (CarSpeedometerProfile profile in cars)
         {
             if (profile.speedometerRoot != null)
@@ -152,17 +163,25 @@ public class CarSpeedometerManager : MonoBehaviour
             }
         }
 
+
         activeProfile = newProfile;
 
-        // Activamos solo el correspondiente al coche
+
+        // Activamos solo el correspondiente
         if (activeProfile.speedometerRoot != null)
         {
             activeProfile.speedometerRoot.SetActive(true);
         }
 
+
         FindConductor();
 
+
+        // Reiniciamos visualmente el velocímetro
         displayedRPM = 0f;
+
+        SetInitialSpeedometerState();
+
 
         Debug.Log(
             "CarSpeedometerManager: velocímetro activo = "
@@ -179,11 +198,17 @@ public class CarSpeedometerManager : MonoBehaviour
     {
         conductor = null;
 
-        if (activeProfile.carRoot == null)
+
+        if (
+            activeProfile == null ||
+            activeProfile.carRoot == null
+        )
             return;
+
 
         conductor =
             activeProfile.carRoot.GetComponent<LogicaConductor>();
+
 
         if (conductor == null)
         {
@@ -192,6 +217,7 @@ public class CarSpeedometerManager : MonoBehaviour
                     .GetComponentInChildren<LogicaConductor>();
         }
 
+
         if (conductor == null)
         {
             conductor =
@@ -199,12 +225,52 @@ public class CarSpeedometerManager : MonoBehaviour
                     .GetComponentInParent<LogicaConductor>();
         }
 
+
         if (conductor == null)
         {
             Debug.LogError(
                 "CarSpeedometerManager: No se ha encontrado LogicaConductor para "
                 + activeProfile.carName
             );
+        }
+    }
+
+
+    // =========================================================
+    // INITIAL STATE
+    // =========================================================
+
+    private void SetInitialSpeedometerState()
+    {
+        if (activeProfile == null)
+            return;
+
+
+        switch (activeProfile.speedometerType)
+        {
+            case SpeedometerType.FilledImage:
+
+                if (activeProfile.fillImage != null)
+                {
+                    activeProfile.fillImage.fillAmount = 0f;
+                }
+
+                break;
+
+
+            case SpeedometerType.Needle:
+
+                if (activeProfile.needle != null)
+                {
+                    activeProfile.needle.localRotation =
+                        Quaternion.Euler(
+                            0f,
+                            0f,
+                            minimumNeedleAngle
+                        );
+                }
+
+                break;
         }
     }
 
@@ -221,7 +287,8 @@ public class CarSpeedometerManager : MonoBehaviour
                 maxRevolutions
             );
 
-        // Suavizamos para que no tiemble
+
+        // Suavizamos el movimiento
         displayedRPM =
             Mathf.Lerp(
                 displayedRPM,
@@ -229,14 +296,20 @@ public class CarSpeedometerManager : MonoBehaviour
                 Time.deltaTime * smoothness
             );
 
+
         switch (activeProfile.speedometerType)
         {
             case SpeedometerType.FilledImage:
+
                 UpdateFilledImage();
+
                 break;
 
+
             case SpeedometerType.Needle:
+
                 UpdateNeedle();
+
                 break;
         }
     }
@@ -250,6 +323,7 @@ public class CarSpeedometerManager : MonoBehaviour
     {
         if (activeProfile.fillImage == null)
             return;
+
 
         activeProfile.fillImage.fillAmount =
             displayedRPM;
@@ -265,6 +339,29 @@ public class CarSpeedometerManager : MonoBehaviour
         if (activeProfile.needle == null)
             return;
 
+
+        /*
+         * Recorrido:
+         *
+         * 0 RPM
+         * 217.9º
+         *
+         * ↓
+         *
+         * 180º
+         * 90º
+         * 0º
+         *
+         * ↓
+         *
+         * MAX RPM
+         * -44.4º
+         *
+         * -44.4º es visualmente lo mismo que 315.6º,
+         * pero evita que Unity tome el arco corto
+         * en el sentido equivocado.
+         */
+
         float angle =
             Mathf.Lerp(
                 minimumNeedleAngle,
@@ -272,12 +369,12 @@ public class CarSpeedometerManager : MonoBehaviour
                 displayedRPM
             );
 
-        Vector3 rotation =
-            activeProfile.needle.localEulerAngles;
 
-        rotation.z = angle;
-
-        activeProfile.needle.localEulerAngles =
-            rotation;
+        activeProfile.needle.localRotation =
+            Quaternion.Euler(
+                0f,
+                0f,
+                angle
+            );
     }
 }

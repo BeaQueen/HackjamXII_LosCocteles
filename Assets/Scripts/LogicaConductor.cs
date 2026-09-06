@@ -7,7 +7,8 @@ using static Interfaces;
 
 public class LogicaConductor : MonoBehaviour
 {
-   public float acelerador;
+    [Header("Seleccion de coche")]
+    public float acelerador;
     float freno;
     Vector2 giro;
     [SerializeField] float rotacionY;
@@ -66,6 +67,12 @@ public class LogicaConductor : MonoBehaviour
     void Start()
     {
         controlador = GetComponent<CharacterController>();
+
+        if (listaDeCoches != null && listaDeCoches.Count > 0)
+        {
+            indiceCoche = Mathf.Clamp(indiceCoche, 0, listaDeCoches.Count - 1);
+            ActivarCoche(indiceCoche);
+        }
     }
   
     // Update is called once per frame
@@ -159,21 +166,49 @@ public class LogicaConductor : MonoBehaviour
    
     public void ActivarCoche(int indice)
     {
-        //for (int i = 0; i < listaDeCoches.Count; i++)
-        //{
-        //    if (i==indice)
-        //    {
-        //        if (!listaDeCoches[i])
-        //        listaDeCoches[i].SetActive(true);
-        //        queCocheSoy = listaDeCoches[i];
-                
-        //    }
-        //    else
-        //    {
-        //        listaDeCoches[i].SetActive(false);
+        Debug.Log(
+        "ActivarCoche llamado con índice: " +
+        indice
+    );
 
-        //    }
-        //}
+        if (listaDeCoches == null || listaDeCoches.Count == 0)
+        {
+            Debug.LogError("ListaDeCoches está vacía");
+            return;
+        }
+        if (listaDeCoches == null || listaDeCoches.Count == 0)
+            return;
+
+        // Hacemos loop en la lista
+        if (indice < 0)
+        {
+            indice = listaDeCoches.Count - 1;
+        }
+        else if (indice >= listaDeCoches.Count)
+        {
+            indice = 0;
+        }
+
+        indiceCoche = indice;
+
+        for (int i = 0; i < listaDeCoches.Count; i++)
+        {
+            bool esCocheSeleccionado = i == indiceCoche;
+
+            listaDeCoches[i].SetActive(esCocheSeleccionado);
+
+            if (esCocheSeleccionado)
+            {
+                queCocheSoy = listaDeCoches[i];
+            }
+        }
+
+        Debug.Log(
+            "Coche seleccionado: " +
+            queCocheSoy.name +
+            " | Índice: " +
+            indiceCoche
+        );
     }
     public void Acelador(InputAction.CallbackContext context)
     {
@@ -184,6 +219,35 @@ public class LogicaConductor : MonoBehaviour
         }
       
     }
+    public void GatilloIzquierdo(InputAction.CallbackContext context)
+    {
+        Debug.Log(
+            "Gatillo izquierdo callback. Phase: " +
+            context.phase
+        );
+
+        if (context.performed)
+        {
+            Debug.Log("<<< PALANCA IZQUIERDA DETECTADA >>>");
+
+            ActivarCoche(indiceCoche - 1);
+        }
+    }
+
+    public void GatilloDerecho(InputAction.CallbackContext context)
+    {
+        Debug.Log(
+            "Gatillo derecho callback. Phase: " +
+            context.phase
+        );
+
+        if (context.performed)
+        {
+            Debug.Log(">>> PALANCA DERECHA DETECTADA <<<");
+
+            ActivarCoche(indiceCoche + 1);
+        }
+    }
     public void Freno(InputAction.CallbackContext context)
     {
         freno = context.ReadValue<float>();
@@ -192,19 +256,30 @@ public class LogicaConductor : MonoBehaviour
     {
         giro = context.ReadValue<Vector2>();
     }
-    public void GatilloIzquierdo(InputAction.CallbackContext context)
+   /* public void GatilloIzquierdo(InputAction.CallbackContext context)
     {
+        Debug.Log(
+            "GatilloIzquierdo llamado. Phase: " +
+            context.phase
+        );
+
         if (context.performed)
         {
+<<<<<<< Updated upstream
             Debug.Log("gatillo izquierdo");
             indiceCoche =indiceCoche-1;
             //if (indiceCoche < 0)
             //{
             //    indiceCoche = listaDeCoches.Count;
             //}
+=======
+            Debug.Log("PALANCA IZQUIERDA DETECTADA");
+>>>>>>> Stashed changes
 
+            ActivarCoche(indiceCoche - 1);
         }
     }
+<<<<<<< Updated upstream
    
     public void GatilloDerecho(InputAction.CallbackContext context)
     {
@@ -217,9 +292,24 @@ public class LogicaConductor : MonoBehaviour
             //{
             //    indiceCoche = 0;
             //}
+=======
 
+    public void GatilloDerecho(InputAction.CallbackContext context)
+    {
+        Debug.Log(
+            "GatilloDerecho llamado. Phase: " +
+            context.phase
+        );
+
+        if (context.performed)
+        {
+            Debug.Log("PALANCA DERECHA DETECTADA");
+>>>>>>> Stashed changes
+
+            ActivarCoche(indiceCoche + 1);
         }
     }
+   */
     void LogicaAcelerador()
     {
         if (acelerador == 1)//no esta apretado
@@ -280,8 +370,21 @@ public class LogicaConductor : MonoBehaviour
        
        
     }
-   
-   public void Orientarse(Vector3 direccion, float Smoth, Transform objetoAOrientar)
+    private void OnGatilloIzquierdo(InputAction.CallbackContext context)
+    {
+        Debug.Log("<<< PALANCA IZQUIERDA DETECTADA >>>");
+
+        ActivarCoche(indiceCoche - 1);
+    }
+
+    private void OnGatilloDerecho(InputAction.CallbackContext context)
+    {
+        Debug.Log(">>> PALANCA DERECHA DETECTADA <<<");
+
+        ActivarCoche(indiceCoche + 1);
+    }
+
+    public void Orientarse(Vector3 direccion, float Smoth, Transform objetoAOrientar)
     {
 
         //Arcotangente,convierte la rotacion en grados ,para saber que rotacion ponerle a mi personaje
@@ -408,6 +511,7 @@ public class LogicaConductor : MonoBehaviour
         }
 
     }
+    
     public void OrientacionAyuda()
     {
         //if (revoluciones > 4)
@@ -440,5 +544,6 @@ public class LogicaConductor : MonoBehaviour
             objetoConQueColisiono.Colision(gameObject,hit.normal);
         }
     }
+    
 
 }

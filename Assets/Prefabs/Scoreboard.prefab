@@ -54,8 +54,8 @@ MonoBehaviour:
   previousLetterText: {fileID: 2608951687630927539}
   currentLetterText: {fileID: 6412274196044965827}
   nextLetterText: {fileID: 8306148334432236772}
-  normalColor: {r: 1, g: 1, b: 1, a: 1}
-  selectedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  normalColor: {r: 0, g: 0, b: 0, a: 1}
+  selectedColor: {r: 1, g: 0.1254902, b: 0.015686275, a: 1}
 --- !u!1 &362967951445846516
 GameObject:
   m_ObjectHideFlags: 0
@@ -288,8 +288,8 @@ MonoBehaviour:
   previousLetterText: {fileID: 2560232477862000477}
   currentLetterText: {fileID: 2395943552617709068}
   nextLetterText: {fileID: 4157516348192370255}
-  normalColor: {r: 1, g: 1, b: 1, a: 1}
-  selectedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  normalColor: {r: 0, g: 0, b: 0, a: 1}
+  selectedColor: {r: 1, g: 0.12691715, b: 0.015686274, a: 1}
 --- !u!1 &1257060097387743997
 GameObject:
   m_ObjectHideFlags: 0
@@ -1131,8 +1131,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1518,8 +1518,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -2052,8 +2052,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -2169,8 +2169,8 @@ MonoBehaviour:
   previousLetterText: {fileID: 8864855752640555349}
   currentLetterText: {fileID: 5667763504997230214}
   nextLetterText: {fileID: 1017506590093803544}
-  normalColor: {r: 1, g: 1, b: 1, a: 1}
-  selectedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  normalColor: {r: 0, g: 0, b: 0, a: 1}
+  selectedColor: {r: 1, g: 0.1254902, b: 0.015686275, a: 1}
 --- !u!1 &8970681244142833761
 GameObject:
   m_ObjectHideFlags: 0
@@ -2319,6 +2319,7 @@ GameObject:
   - component: {fileID: 8439138842322440677}
   - component: {fileID: 8010020388302887432}
   - component: {fileID: 3109886506594823796}
+  - component: {fileID: 5376225636039476401}
   m_Layer: 5
   m_Name: TimeNumber
   m_TagString: Untagged
@@ -2445,3 +2446,16 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &5376225636039476401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9161244622294972471}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba2aecc3a80195b4d8ecb1d9240e3736, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LeaderboardTimeDisplay
+  timeText: {fileID: 3109886506594823796}
