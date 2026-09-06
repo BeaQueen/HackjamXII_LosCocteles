@@ -830,6 +830,7 @@ GameObject:
   - component: {fileID: 1866310349}
   - component: {fileID: 1866310348}
   - component: {fileID: 1866310352}
+  - component: {fileID: 1866310353}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -934,6 +935,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7d8ec85d34df5a40ac2e1b8c5e583fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MainMenu
+--- !u!114 &1866310353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1866310347}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f17a49e94fe8fe428b13fd3b20a08cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CreditsWheelInput
+  backButton: {fileID: 1722886021}
+  brakeAction: {fileID: 8001411006616221582, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  pedalPressedThreshold: 0.8
+  pedalReleasedThreshold: 0.95
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
