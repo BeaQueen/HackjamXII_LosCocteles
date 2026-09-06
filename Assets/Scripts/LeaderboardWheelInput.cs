@@ -66,7 +66,7 @@ public class LeaderboardWheelInput : MonoBehaviour
     {
         if (scoreSaved)
             return;
-
+        Debug.Log("le doyy");
         letterCarousels[currentSlot].PreviousLetter();
     }
 

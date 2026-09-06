@@ -200,42 +200,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""1D Axis"",
-                    ""id"": ""67a81b61-77b6-406c-91b0-ee552cf337fb"",
-                    ""path"": ""1DAxis"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Volante"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""negative"",
-                    ""id"": ""e35831b3-1b15-438e-8c0c-9a9113ed189a"",
-                    ""path"": ""<Keyboard>/a"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Volante"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""positive"",
-                    ""id"": ""47e23664-153a-4e4e-bcd3-2940f3820ad8"",
-                    ""path"": ""<Keyboard>/d"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Volante"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
                     ""name"": """",
                     ""id"": ""1062837e-0b7d-47cb-9184-bf581fe46204"",
-                    ""path"": ""<HID::Logitech G923 Racing Wheel for PlayStation and PC>/button2"",
+                    ""path"": ""<HID::Logitech G923 Racing Wheel for PlayStation and PC>/button6"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -246,7 +213,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""c18fdeda-8bea-47be-abf0-2be3ca4a6ca0"",
-                    ""path"": ""<HID::Logitech G923 Racing Wheel for PlayStation and PC>/button3"",
+                    ""path"": ""<HID::Logitech G923 Racing Wheel for PlayStation and PC>/button5"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",

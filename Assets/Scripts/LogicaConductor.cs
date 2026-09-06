@@ -58,6 +58,8 @@ public class LogicaConductor : MonoBehaviour
     [SerializeField] List<GameObject> listaDeCoches;
     [SerializeField] GameObject queCocheSoy;
     [SerializeField] int indiceCoche;
+   
+
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -65,13 +67,13 @@ public class LogicaConductor : MonoBehaviour
     {
         controlador = GetComponent<CharacterController>();
     }
-
+  
     // Update is called once per frame
     void Update()
     {
         //Debug.Log(freno);
-        Debug.Log(acelerador);
-        Debug.Log(giro.x);
+        //Debug.Log(acelerador);
+        //Debug.Log(giro.x);
         if (giro.x>-0.01&&giro.x<0.01)
         {
             Orientarse(transform.forward, 0, ruedasAGirar.transform);
@@ -151,7 +153,10 @@ public class LogicaConductor : MonoBehaviour
         {
             OrientarsePorGolpe(direccionOrientacionPorGolpe, 0.1f, transform);
         }
+      
     }
+   
+   
     public void ActivarCoche(int indice)
     {
         //for (int i = 0; i < listaDeCoches.Count; i++)
@@ -191,7 +196,8 @@ public class LogicaConductor : MonoBehaviour
     {
         if (context.performed)
         {
-            indiceCoche --;
+            Debug.Log("gatillo izquierdo");
+            indiceCoche =indiceCoche-1;
             //if (indiceCoche < 0)
             //{
             //    indiceCoche = listaDeCoches.Count;
@@ -199,12 +205,14 @@ public class LogicaConductor : MonoBehaviour
 
         }
     }
+   
     public void GatilloDerecho(InputAction.CallbackContext context)
     {
-        Debug.Log("presiono");
+        
         if (context.performed)
         {
-            indiceCoche ++;
+            Debug.Log("gatillo derecho");
+            indiceCoche =indiceCoche+1;
             //if (indiceCoche>listaDeCoches.Count)
             //{
             //    indiceCoche = 0;

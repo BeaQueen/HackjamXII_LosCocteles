@@ -15,19 +15,19 @@ MonoBehaviour:
   gradient:
     serializedVersion: 2
     key0: {r: 0.17735851, g: 0.17367749, b: 0.17367749, a: 1}
-    key1: {r: 0.5849056, g: 0.5849056, b: 0.5849056, a: 1}
-    key2: {r: 0.381132, g: 0.381132, b: 0.381132, a: 1}
+    key1: {r: 0.4509804, g: 0.4509804, b: 0.4509804, a: 1}
+    key2: {r: 0.4490565, g: 0.4490565, b: 0.4490565, a: 1}
     key3: {r: 1, g: 1, b: 1, a: 0}
     key4: {r: 1, g: 1, b: 1, a: 0}
-    key5: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 1, g: 1, b: 1, a: 0}
     key6: {r: 0, g: 0, b: 0, a: 0}
     key7: {r: 0, g: 0, b: 0, a: 0}
     ctime0: 21357
-    ctime1: 23207
-    ctime2: 45104
-    ctime3: 47108
+    ctime1: 23516
+    ctime2: 42328
+    ctime3: 44487
     ctime4: 47108
-    ctime5: 0
+    ctime5: 47108
     ctime6: 0
     ctime7: 0
     atime0: 0
