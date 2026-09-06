@@ -5,46 +5,175 @@ using static Interfaces;
 
 public class Portal : MonoBehaviour, IColision
 {
-    [SerializeField] GameObject camara;
-    [SerializeField] GameObject mundoADesactivar;
-    [SerializeField] GameObject mundoACambiar;
-    [SerializeField] bool esBrechaFinal;
-   
+    // =========================================================
+    // PORTAL
+    // =========================================================
 
-    public void Colision(GameObject jugador, Vector3 direccionColision)
-    {
-        
-        StartCoroutine(CambioDeMundo());
-      //  camara.GetComponent<Animator>().SetBool("Blanco",true);
-       // SceneManager.LoadScene("Leaderboard");
-    }
+    [Header("Portal")]
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    [SerializeField]
+    private GameObject camara;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-    IEnumerator CambioDeMundo()
-    {
-        camara.GetComponent<Animator>().SetBool("Blanco", true);
+    [SerializeField]
+    private GameObject mundoADesactivar;
 
-        yield return new WaitForSeconds(2);
-        if (esBrechaFinal )
+    [SerializeField]
+    private GameObject mundoACambiar;
+
+    [SerializeField]
+    private bool esBrechaFinal;
+
+
+    // =========================================================
+    // RACE
+    // =========================================================
+
+    [Header("Race")]
+
+    [Tooltip(
+        "RaceTimer de la escena. Solo es necesario para la brecha final."
+    )]
+    [SerializeField]
+    private RaceTimer raceTimer;
+
+
+    // =========================================================
+    // INTERNAL
+    // =========================================================
+
+    private bool cambioEnProceso = false;
+
+
+    // =========================================================
+    // COLLISION
+    // =========================================================
+
+    public void Colision(
+        GameObject jugador,
+        Vector3 direccionColision)
+    {
+        // Evitamos ejecutar varias veces el portal
+        // mientras el jugador sigue tocándolo.
+        if (cambioEnProceso)
+            return;
+
+
+        cambioEnProceso = true;
+
+
+        // Si es la meta final,
+        // guardamos el tiempo JUSTO EN ESTE MOMENTO.
+        //
+        // Los 2 segundos de transición visual
+        // NO cuentan para el leaderboard.
+
+        if (esBrechaFinal)
         {
-            SceneManager.LoadScene("Leaderboard");
+            if (raceTimer != null)
+            {
+                raceTimer.RegisterRaceFinish();
+
+                Debug.Log(
+                    "PORTAL FINAL: tiempo de carrera registrado."
+                );
+            }
+            else
+            {
+                Debug.LogError(
+                    "PORTAL FINAL: RaceTimer no está asignado."
+                );
+            }
         }
+
+
+        StartCoroutine(
+            CambioDeMundo()
+        );
+    }
+
+
+    // =========================================================
+    // WORLD CHANGE
+    // =========================================================
+
+    private IEnumerator CambioDeMundo()
+    {
+        // Activamos transición blanca
+        if (camara != null)
+        {
+            Animator animator =
+                camara.GetComponent<Animator>();
+
+            if (animator != null)
+            {
+                animator.SetBool(
+                    "Blanco",
+                    true
+                );
+            }
+        }
+
+
+        // Esperamos a que termine la transición
+        yield return new WaitForSeconds(2f);
+
+
+        // =====================================================
+        // FINAL PORTAL
+        // =====================================================
+
+        if (esBrechaFinal)
+        {
+            Debug.Log(
+                "Cargando Leaderboard. Tiempo guardado: "
+                + RaceResultData.FinalTime
+            );
+
+
+            SceneManager.LoadScene(
+                "Leaderboard"
+            );
+        }
+
+
+        // =====================================================
+        // NORMAL PORTAL
+        // =====================================================
+
         else
         {
-            mundoADesactivar.SetActive(false);
-            mundoACambiar.SetActive(true);
-            camara.GetComponent<Animator>().SetBool("Blanco", false);
+            if (mundoADesactivar != null)
+            {
+                mundoADesactivar.SetActive(
+                    false
+                );
+            }
 
+
+            if (mundoACambiar != null)
+            {
+                mundoACambiar.SetActive(
+                    true
+                );
+            }
+
+
+            if (camara != null)
+            {
+                Animator animator =
+                    camara.GetComponent<Animator>();
+
+                if (animator != null)
+                {
+                    animator.SetBool(
+                        "Blanco",
+                        false
+                    );
+                }
+            }
+
+
+            cambioEnProceso = false;
         }
     }
 }

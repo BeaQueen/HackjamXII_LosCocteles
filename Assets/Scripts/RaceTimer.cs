@@ -83,7 +83,26 @@ public class RaceTimer : MonoBehaviour
         );
     }
 
+    public void RegisterRaceFinish()
+    {
+        if (raceEnded)
+            return;
 
+        raceEnded = true;
+        timerRunning = false;
+
+        float completionTime =
+            raceDuration - remainingTime;
+
+        RaceResultData.SetFinalTime(
+            completionTime
+        );
+
+        Debug.Log(
+            "CARRERA COMPLETADA | Tiempo guardado: "
+            + completionTime
+        );
+    }
     private void Update()
     {
         if (!timerRunning)
