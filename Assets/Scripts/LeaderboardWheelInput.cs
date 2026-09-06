@@ -177,20 +177,7 @@ public class LeaderboardWheelInput : MonoBehaviour
     {
         if (scoreSaved)
             return;
-<<<<<<< Updated upstream
-        Debug.Log("le doyy");
-        letterCarousels[currentSlot].PreviousLetter();
-=======
-
-        Debug.Log(
-            "LEADERBOARD: palanca izquierda"
-        );
-
-        letterCarousels[currentSlot]
-            .PreviousLetter();
->>>>>>> Stashed changes
     }
-
 
     private void OnRightPressed(
         InputAction.CallbackContext context)
