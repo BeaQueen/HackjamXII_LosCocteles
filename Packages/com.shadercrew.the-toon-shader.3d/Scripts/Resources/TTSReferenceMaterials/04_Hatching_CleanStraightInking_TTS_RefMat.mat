@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: 04_Hatching_CleanStraightInking_TTS_RefMat
-  m_Shader: {fileID: 4800000, guid: bc97b42f0416e4147b3917bc938d658e, type: 3}
+  m_Shader: {fileID: 4800000, guid: 5b7d18bf8a091cc48a3a9075eca72ff9, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
@@ -388,3 +388,4 @@ Material:
     - _StylingRimColor: {r: 1, g: 1, b: 1, a: 1}
     - _StylingSpecularColor: {r: 1, g: 0.9570925, b: 0.7971698, a: 1}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1
