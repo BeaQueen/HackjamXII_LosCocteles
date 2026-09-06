@@ -59,11 +59,19 @@ public class LogicaConductor : MonoBehaviour
     [SerializeField] List<GameObject> listaDeCoches;
     [SerializeField] GameObject queCocheSoy;
     [SerializeField] int indiceCoche;
+   public TipoDeCoche tipoDeCoche;
    
 
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+
+    public enum TipoDeCoche
+    {
+        Pasado,
+        Presente,
+        Futuro
+    }
     void Start()
     {
         controlador = GetComponent<CharacterController>();
@@ -200,6 +208,18 @@ public class LogicaConductor : MonoBehaviour
             if (esCocheSeleccionado)
             {
                 queCocheSoy = listaDeCoches[i];
+                if (i==0)
+                {
+                    tipoDeCoche=TipoDeCoche.Presente;
+                }
+                else if (i==1)
+                {
+                    tipoDeCoche=TipoDeCoche.Futuro;
+                }
+                else if(i==2)
+                {
+                    tipoDeCoche=TipoDeCoche.Pasado;
+                }
             }
         }
 

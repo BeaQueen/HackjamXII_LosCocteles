@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class MovimientoMeteorito : MonoBehaviour
+public class MovimientoMeteorito : LogicaConductor
 {
     [SerializeField] Transform zonaAterrizaje;
     [SerializeField] GameObject[] zonasDeFuego;
@@ -8,6 +8,8 @@ public class MovimientoMeteorito : MonoBehaviour
     [SerializeField] GameObject sistemaParticulasExplosion;
     [SerializeField] GameObject craterImpacto;
     [SerializeField] LayerMask mascaraConductor;
+    [SerializeField] TipoDeCoche cocheAlQueNoAfecto;
+    LogicaConductor scriptJugador;
 
     // Start is called before the first frame update
     void Start()
@@ -26,11 +28,38 @@ public class MovimientoMeteorito : MonoBehaviour
         Collider[] colls = Physics.OverlapSphere(transform.position, 4, mascaraConductor);
         if (colls.Length>0)
         {
-            //if (colls[0].GetComponent<>)
-            //{
+            if (colls[0].GetComponent<LogicaConductor>()!=null)//si es conductor
+            {
+                LogicaConductor scriptConductor = colls[0].GetComponent<LogicaConductor>();
+                if (cocheAlQueNoAfecto==scriptConductor.tipoDeCoche)//si encajo quiere decir que no le afecto
+                {
 
-            //}
+                }
+                else//si no encajo si le afecto
+                {
+                    scriptJugador.ReducirRevoluciones();
+                    scriptJugador.orientarPorGolpe = true;
+                  
+                   
+                    scriptJugador.puedoGirar = false;
+                    scriptJugador.puedoPisarAcelerador = false;
+                    scriptJugador.acelerando = false;
+                    scriptJugador.acelerador = 1;
+                    scriptJugador.multiplicador = 0;
+                    colls[0].GetComponent<ParpadeoGolpe>().IniciarParpadeo();
+
+                    Invoke("PermitirGirarJugador", 0.3F);
+                }
+               
+               
+            }
         }
+    }
+    void PermitirGirarJugador()
+    {
+        scriptJugador.orientarPorGolpe = false;
+        scriptJugador.puedoGirar = true;
+        scriptJugador.puedoPisarAcelerador = true;
     }
 
     // Update is called once per frame

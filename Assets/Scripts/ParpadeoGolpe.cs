@@ -17,6 +17,10 @@ public class ParpadeoGolpe : MonoBehaviour
     {
         
     }
+    public void IniciarParpadeo()
+    {
+        StartCoroutine(Parpadeo());
+    }
     IEnumerator Parpadeo()
     {
         for (int i = 0; i < renderer.Count; i++)

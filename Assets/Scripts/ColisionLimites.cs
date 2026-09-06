@@ -1,30 +1,42 @@
 using UnityEngine;
 using static Interfaces;
 
-public class ColisionLimites : MonoBehaviour , IColision
+public class ColisionLimites : LogicaConductor, IColision
 {
     LogicaConductor scriptJugador;
     [SerializeField] Transform direccionOrientacion;
+    [SerializeField] TipoDeCoche cocheAQueNoAfecta;
    
 
     public void Colision(GameObject jugador, Vector3 direccionColision)
     {
+       
         scriptJugador = jugador.GetComponent<LogicaConductor>();
-        scriptJugador.ReducirRevoluciones();
-        scriptJugador.orientarPorGolpe = true;
-        //scriptJugador.Orientarse(direccionColision, 0.1f, jugador.transform);//orientamos segun una referencia que tiene esta colision
-        if (direccionColision != null)
+        if (cocheAQueNoAfecta==scriptJugador.tipoDeCoche )//si soy el mismo significa que no le afecto
         {
-           scriptJugador.direccionOrientacionPorGolpe = direccionColision+direccionOrientacion.forward;                                                                                     // scriptJugador.Impulso(direccionOrientacion.transform.forward, 20);
+
 
         }
-        scriptJugador.puedoGirar = false;
-        scriptJugador.puedoPisarAcelerador = false;
-        scriptJugador.acelerando = false;
-        scriptJugador.acelerador = 1;
-        scriptJugador.multiplicador = 0;
+        else
+        {
+            scriptJugador.ReducirRevoluciones();
+            scriptJugador.orientarPorGolpe = true;
+            //scriptJugador.Orientarse(direccionColision, 0.1f, jugador.transform);//orientamos segun una referencia que tiene esta colision
+            if (direccionColision != null)
+            {
+               scriptJugador.direccionOrientacionPorGolpe = direccionColision+direccionOrientacion.forward;                                                                                     // scriptJugador.Impulso(direccionOrientacion.transform.forward, 20);
 
-        Invoke("PermitirGirarJugador", 0.3F);
+            }
+            scriptJugador.puedoGirar = false;
+            scriptJugador.puedoPisarAcelerador = false;
+            scriptJugador.acelerando = false;
+            scriptJugador.acelerador = 1;
+            scriptJugador.multiplicador = 0;
+
+            Invoke("PermitirGirarJugador", 0.3F);
+
+        }
+       
     }
 
     void PermitirGirarJugador()
